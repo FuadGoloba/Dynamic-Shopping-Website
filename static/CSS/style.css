@@ -4,26 +4,47 @@
     box-sizing: border-box;
 }
 
+
+/* Styling for navbar alignment'*/
+
 .navbar {
     display: flex;
     align-items: center;
     padding: 20px;
 }
 
+
+/* Styling to align navbar to right'*/
+
 nav {
     flex: 1;
     text-align: right;
 }
+
+
+/* Styling to remove bullet point on navbar; Home, account, etc'*/
 
 nav ul {
     display: inline-block;
     list-style-type: none;
 }
 
+
+/* Styling to make navbar into horizontals'*/
+
 nav li {
     display: inline-block;
     margin-right: 20px;
+    -webkit-transition: color 2s;
+    transition: color 2s;
 }
+
+nav li:hover {
+    color: #ffd6d6;
+}
+
+
+/* Styling for color of navbar'*/
 
 a {
     text-decoration: none;
@@ -58,12 +79,18 @@ p {
     min-width: 300px;
 }
 
+
+/* Styling for image'*/
+
 .col-2 img {
     max-width: 102%;
     padding: 0 50px;
     position: relative;
-    height: 400%;
+    width: 100%;
 }
+
+*/
+/* Styling for 'NEW COLLECTION '*/
 
 .col-2 h1 {
     font-size: 30px;
@@ -72,9 +99,12 @@ p {
     padding: 8px 30px;
     margin: 0 300px;
     flex-wrap: wrap;
-    top: 700px;
-    left: 200px;
+    top: 200px;
+    left: 50px;
 }
+
+
+/* button for 'SHOP NOW' */
 
 .btn {
     display: inline-block;
@@ -83,10 +113,434 @@ p {
     padding: 8px 30px;
     margin: 0 300px;
     flex-wrap: wrap;
+    transition: 0.5;
 }
 
 .shop {
     position: absolute;
     top: 800px;
     left: 295px;
+}
+
+
+/* color for when you hover on 'shop now'*/
+
+.btn:hover {
+    background: #563434;
+}
+
+.categories {
+    margin: 70px 0;
+}
+
+.col-4 {
+    flex: 25%;
+    min-width: 250px;
+    margin-bottom: 30px;
+    transition: transform 0.5s
+}
+
+.col-4 img {
+    width: 80%;
+    height: 30%;
+    transition: 0.5;
+}
+
+.title {
+    text-align: center;
+    margin: 0 auto 30px;
+    position: relative;
+    line-height: 60px;
+    color: #555;
+}
+
+.title::after {
+    content: '';
+    background: lightpink;
+    width: 80px;
+    height: 5px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: tranlsate(-50%);
+}
+
+.small-container {
+    max-width: 1150px;
+    margin: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.categories h2 {
+    color: #555;
+    font-size: 25px;
+    padding: 8px 50px;
+    flex-wrap: wrap;
+}
+
+.small-container h2 {
+    color: #555;
+    font-size: 35px;
+    padding: 8px 50px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.col-4 h3 {
+    font-size: 20px;
+    color: #555;
+    text-align: center;
+}
+
+.col-4 p {
+    text-align: center;
+}
+
+.name {
+    text-align: center;
+    color: #555;
+    font-weight: bold;
+}
+
+.price {
+    text-align: center;
+    color: #555;
+}
+
+.col-4:hover {
+    transform: translateY(-5px);
+    filter: opacity(80%);
+}
+
+.rating {
+    text-align: center;
+}
+
+.rating .fa {
+    color: lightpink;
+}
+
+
+/*.categories h2::after {
+    content: '';
+    background: lightpink;
+    width: 80px;
+    height: 5px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+    transform: translate(-50%);
+}*/
+
+.col-1 {
+    flex-basis: 50%;
+    min-width: 300px;
+}
+
+.col-1 img {
+    max-width: 80%;
+    padding: 50px 0;
+}
+
+.col-1 h3 {
+    font-style: italic;
+    color: #555;
+    font-size: 20px;
+}
+
+.btn-2 {
+    display: inline-block;
+    background: lightpink;
+    color: white;
+    padding: 8px 30px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+    transition: 0.5;
+}
+
+.btn-2:hover {
+    background: #563434;
+}
+
+.offer {
+    background: radial-gradient(#fff, #ffd6d6);
+}
+
+
+/*--------------------------testimonial-------------------------*/
+
+.testimonial {
+    padding-top: 100px;
+}
+
+.testimonial .col-4 {
+    text-align: center;
+    padding: 10px 10px;
+    box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.5s;
+    margin-left: 30px;
+}
+
+.testimonial .col-4 img {
+    width: 50px;
+    margin-top: 20px;
+    border-radius: 50%;
+}
+
+.testimonial .col-4 hover {
+    transform: translateY(-10px);
+}
+
+.fa.fa-quote-left {
+    font-size: 30px;
+    color: lightpink;
+}
+
+.testimonial .col-4 p {
+    font-size: 12px;
+    margin: 12px 0;
+    color: #777;
+}
+
+.testimonial h3 {
+    font-weight: 600;
+    color: #555;
+    font-size: 16px;
+}
+
+
+/*--------------------------footer-------------------------*/
+
+.footer {
+    background: tan;
+    color: #555;
+    font-size: 14px;
+    padding: 60px 0 20px;
+}
+
+.footer p {
+    color: #555;
+}
+
+.footer h3 {
+    margin-bottom: 40px;
+}
+
+.footer-col-1,
+.footer-col-2,
+.footer-col-3,
+.footer-col-4 {
+    min-width: 250px;
+    margin-bottom: 20px;
+}
+
+.footer-col-2 {
+    flex-basis: 30%
+}
+
+.footer-col-4 {
+    flex: 1;
+    text-align: center;
+}
+
+.footer-col-1,
+.footer-col-3 {
+    flex: 1;
+    flex-basis: 12%;
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.btn2 {
+    display: inline-block;
+    background: lightpink;
+    color: white;
+    padding: 8px 30px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.footer-hr {
+    border: none;
+    background: #b5b5b5;
+    height: 1px;
+    margin: 20px 0;
+}
+
+.copyright {
+    text-align: center;
+}
+
+
+/* Styling for menu icon*/
+
+.fa.fa-bars {
+    width: 20px;
+    margin-left: 20px;
+    display: none;
+}
+
+
+/*--------------------------mediu query for menu-------------------------*/
+
+
+/*--------------------------mediu query for menu-------------------------*/
+
+@media only screen and (max-width:800px) {
+    nav ul {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        background: #333;
+        width: 100%;
+        overflow: hidden;
+        transition: max-height 0.5s;
+    }
+    nav ul li {
+        display: block;
+        margin-right: 50px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    nav ul li a {
+        color: white;
+    }
+    .fa.fa-bars {
+        display: block;
+        cursor: pointer;
+    }
+}
+
+
+/*--------------------------mediu query for less than 600 screen size making it responsive-------------------------*/
+
+@media only screen and (max-width:600px) {
+    .row {
+        text-align: center;
+    }
+    .col-1 .col-2 .col-3 .col-4 {
+        flex-basis: 100%;
+        min-width: 100px;
+    }
+    .single-product .row {
+        text-align: left;
+    }
+    .single-product .col-2b {
+        padding: 20px 0;
+    }
+    .single-product h1 {
+        font-size: 26px;
+        line-height: 32px;
+    }
+}
+
+
+/*----------------------all products page --------------------------*/
+
+.row-2 {
+    justify-content: space-between;
+    margin: 100x auto 50px;
+}
+
+select {
+    border: 2px solid;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.page-btn {
+    margin: 0 auto 80px;
+}
+
+.page-btn span {
+    display: inline-block;
+    border: 1px solid lightpink;
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+}
+
+.page-btn span:hover {
+    background: lightpink;
+}
+
+.col-2b {
+    flex-basis: 50%;
+    min-width: 300px;
+}
+
+.col-2b img {
+    max-width: 100%;
+    padding: 50px 0;
+}
+
+.col-2b h1 {
+    font-size: 45px;
+    line-height: 60px;
+    margin: 25px 0;
+}
+
+*/
+/*----------------------product details page --------------------------*/
+
+.single-product {
+    margin-top: 30px;
+}
+
+.single-product .col-2b img {
+    padding: 0;
+}
+
+.single-product .col-2b {
+    padding: 20px;
+}
+
+.single-product h3 {
+    margin: 0px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #555;
+}
+
+.single-product h4 {
+    margin: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #555;
+}
+
+.single-product select {
+    display: block;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.single-product input {
+    width: 50px;
+    height: 40px;
+    padding-left: 10px;
+    font-size: 20px;
+    margin-right: 10px;
+    margin-top: 0px;
+    border: 1px solid lightpink;
+}
+
+input:focus {
+    outline: none;
+}
+
+.row-row-2 h4 {
+    margin: 20px;
+    font-size: 15px;
+    color: #555;
 }

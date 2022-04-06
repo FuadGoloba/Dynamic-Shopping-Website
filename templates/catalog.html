@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Catalog
+{% endblock %}
+
+{% block main %}
+
+<!--div class="categories"-->
+    
+    <div class="small-container">
+
+        <div class="row row-2">
+            <h2>Products</h2>
+            <form action="/catalog" method="post">
+                <select name="sort_by" onchange="this.form.submit()"> <!--Uses JS to submit an option-->
+                    <option disable selected>Sort by</option>
+                    {% for option in sort_option %}
+
+                        <option>{{ option }}</option>
+
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-4">
+                <a href="/productDetail?name={{ product["name"] }}">
+                <h3>{{ product["category_name"] }}</h3>
+                <img src="/static/products/{{ product["image"] }}">
+                <div class="name">{{ product["name"] }}</div>
+                <div class="rating">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-o"></i>
+                </div>
+                <div class="price">{{ product["price"] | eur }}</div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="page-btn">
+        <span>1</span>
+        <span>2</span>
+        <span>3</span>
+        <span>&#8594;</span>
+<!---->
+
+{% endblock %}

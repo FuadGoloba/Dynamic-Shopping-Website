@@ -1,0 +1,233 @@
+{% extends "layout.html" %} 
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+
+    <div class="row">
+        <div class="col-2">
+            <!--h1>NEW COLLECTION</h1-->
+        </div>
+        <div class="col-2">
+            <img src="/static/images/Sapphire 2.JPG">
+            <!--h1>NEW COLLECTION</h1-->
+            <div class="shop">
+                <a href="/catalog" class="btn">SHOP NOW</a>
+            </div>
+        </div>
+    </div>
+
+    <!-------------------- featured collection --------------- -->
+        <div class="categories">
+            <h2 class="title">Featured Collection</h2>
+            <div class="small-container">
+                <div class="row">
+                {#{% for collection in feature_img %}#}
+                    <!--div class="col-4">
+                        <a href="/productDetail?name={#{{ collection["name"] }}#}">
+                        <h3>{#{{ collection["category_name"] }}#}</h3>
+                        <img src="/static/products/{#{{ collection["image"] }}#}">
+                        <div class="name">{#{{ collection["name"] }}#}</div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                        </div>
+                        </a>
+                        <div class="price">{#{{ collection["price"] | eur }}#}</div>-->
+                    <div class="col-4">
+                        <a href="/productDetail?name=Tari">
+                        <h3>Bridal</h3>
+                        <img src="/static/products/Tari.jpg">
+                        <div class="name">Tari</div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <div class="price">€500.00</div>
+                        </a>
+                    </div>
+
+                    <div class="col-4">
+                        <a href="/productDetail?name=Cleos suit">
+                        <h3>Custom</h3>
+                        <img src="/static/products/Cleos suit.jpg">
+                        <div class="name">Cleos suit</div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <div class="price">€100.00</div>
+                        </a>
+                    </div>
+
+                    <div class="col-4">
+                        <a href="/productDetail?name=Eva">
+                        <h3>Medieval</h3>
+                        <img src="/static/products/Eva.jpg">
+                        <div class="name">Eva</div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <div class="price">€30.00</div>
+                        </a>
+                    </div>
+
+                        
+                    <div class="col-4">
+                        <a href="/productDetail?name=Amy Burnt Orange">
+                        <h3>Polka</h3>
+                        <img src="/static/products/Amy Burnt Orange.jpg">
+                        <div class="name">Amy Burnt Orange</div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fastar"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <div class="price">€40.00</div>
+                        </a>
+                    </div>
+                        
+                    <!--/div>
+                    {#{% endfor %}#}-->
+                </div>
+            </div>
+            <!-------------------- Latest Products --------------- -->
+            <h2 class="title">Latest Products</h2>
+            <div class="row">
+                <div class="col-4">
+                    <a href="/productDetail?name=Sapphire">
+                    <img src="/static/products/Sapphire.jpg">
+                    <div class="name">Sapphire</div>
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-o"></i>
+                    </div>
+                    <div class="price">€60.00</div>
+                    </a>
+                </div>
+                <div class="col-4">
+                    <a href="/productDetail?name=Elora">
+                    <img src="/static/products/Elora.jpg">
+                    <div class="name">Elora</div>
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                    </div>
+                    <div class="price">€35.00</div>
+                    </a>
+                </div>
+                <div class="col-4">
+                    <a href="/productDetail?name=Leah">
+                    <img src="/static/products/Leah.jpg">
+                    <div class="name">Leah</div>
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                    </div>
+                    <div class="price">€40.00</div>
+                    </a>
+                </div>
+                <div class="col-4">
+                    <a href="/productDetail?name=Havana">
+                    <img src="/static/products/Havana.jpg">
+                    <div class="name">Havana</div>
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-o"></i>
+                    </div>
+                    <div class="price">€50.00</div>
+                    </a>
+                </div>
+        </div>
+        <div class="row">
+            <div class="col-1">
+                <h3>Diverse designs crafted to suit every woman's style.</h3>
+                <a href="/catalog" class="btn-2">SEE ALL</a>
+            </div>
+            <div class="col-1">
+                <img src="/static/images/Sapphire1.jpg">
+        </div>
+         <!-------------------- Testimonial --------------- -->
+        <div class="testimonial">
+            <div class="small-container">
+                <div class="row">
+                    <div class="col-4">
+                        <i class="fa fa-quote-left"></i>
+                        <p>My Amy dress fits perfectly like gum. The packaging got
+                            me really excited like a 4 year old that can't wait to 
+                            unwrap a gift. Love it!</p>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <img src="/static/images/CEO.jpeg">
+                            <h3>Kanyinsola</h3>
+                    </div>
+                    <div class="col-4">
+                        <i class="fa fa-quote-left"></i>
+                        <p>My Amy dress fits perfectly like gum. The packaging got
+                            me really excited like a 4 year old that can't wait to 
+                            unwrap a gift. Love it!</p>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <img src="/static/images/CEO.jpeg">
+                            <h3>Esther</h3>
+                    </div>
+                    <div class="col-4">
+                        <i class="fa fa-quote-left"></i>
+                        <p>My Amy dress fits perfectly like gum. The packaging got
+                            me really excited like a 4 year old that can't wait to 
+                            unwrap a gift. Love it!</p>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <img src="/static/images/CEO.jpeg">
+                            <h3>Olusanjo</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+{% endblock %}
+

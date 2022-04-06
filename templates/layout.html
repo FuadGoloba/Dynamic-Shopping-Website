@@ -4,9 +4,12 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>K A Y K A Y</title>
+    <title>K A Y K A Y: {% block title %}{% endblock %}</title>
     <link href="/static/CSS/style.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
 
 </head>
 
@@ -14,32 +17,105 @@
     <div class="container">
         <div class="navbar">
             <div class="logo">
-                <img src="/static/images/kb2.PNG" width="160px">
+                <a href="/"><img src="/static/images/kb2.PNG" width="160px"></a>
             </div>
             <nav>
-                <ul>
+                {% if session["user_id"] %}
+                <ul id="MenuItems">
                     <li><a href="/">HOME</a></li>
                     <li><a href="/catalog">CATALOG</a></li>
-                    <li><a href="/about_us">ABOUT</a></li>
-                    <li><a href="/account">ACCOUNT</a></li>
-                    <li><a href="/cart">CART</a></li>
+                    <li><a href="/account">{{ username }}</a></li>
+                    <li><a href="/search"><i class='fa fa-search'></i></a></li>
+                    <li><a href="/cart"><i class='fa fa-shopping-bag'></i></a><li>
+
                 </ul>
+                {% else %}
+                <ul id="MenuItems">
+                    <li><a href="/">HOME</a></li>
+                    <li><a href="/catalog">CATALOG</a></li>
+                    <li><a href="/account">LOG IN</a></li>
+                    <li><a href="/search"><i class='fa fa-search'></i></a></li>
+                    <li><a href="/cart"><i class='fa fa-shopping-bag'></i></a><li>
+                </ul>
+                {% endif %}
             </nav>
+            <!--adding cart image to the navbar-->
+            <!--<img src="/static/images/icons8-cart-64.png" height="30px" width="30px"-->
+            <i class='fa fa-bars' onclick="menutoggle()"></i> <!--Adding menu icon -->
         </div>
-        <div class="row">
-            <div class="col-2">
-                <!--h1>NEW COLLECTION</h1-->
-            </div>
-            <div class="col-2">
-                <img src="/static/images/Sia.JPG">
-                <h1>NEW COLLECTION</h1>
-                <div class="shop">
-                    <a href="" class="btn">SHOP NOW</a>
+        {% if get_flashed_messages() %}
+            <header>
+                <div class="alert alert-primary mb-0 text-center" role="alert">
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% endif %}
+
+        <main class="container-fluid py-5 text-center">
+            {% block main %}{% endblock %}
+        </main>
+    
+    <!-------------------- Footer --------------- -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col-1">
+                    <h3>Useful Links</h3>
+                    <ul>
+                        <li><a href="/search">Search</a></li>
+                        <li><a href="/about_us">About</a></li>
+                        <li>Size Chart</li>
+                        <li>Shipping Policy</li>
+                    </ul>
+                </div>
+                <div class="footer-col-2">
+                    <h3>Latest News</h3>
+                </div>
+                <div class="footer-col-3">
+                    <h3>Follow us</h3>
+                    <ul>
+                        <li><a href=""><i class='fa fa-facebook'></i></a></li>
+                        <li><a href=""><i class='fa fa-twitter'></i></a></li>
+                        <li><a href=""><i class='fa fa-instagram'></i></a></li>
+                    </ul>
+                </div>
+                <div class="footer-col-4">
+                    <h3>Newsletter</h3>
+                    <p> Sign up for the latest news, offers
+                        and styles</p>
+                    <form action="/subscribe" method="post">
+                        <div class="mb-3">
+                            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="email" name="email" placeholder="Your email" type="text" required>
+                        </div>
+                        <div>
+                        <button class="btn2" type="submit">SUBSCRIBE</button>
+                        </div>
+                    </form>   
                 </div>
             </div>
+            <hr>
+            <p class="copyright">Copyright © 2022, kaykay.</p>
+
         </div>
+    </div>
+<!-----------------------------js script for toggle menu-------------------------------->
 
+    <script>
+        var MenuItems = document.getElementById("MenuItems")
 
+        MenuItems.style.maxHeight = "0px";
+
+        function menutoggle(){
+            if (MenuItems.style.maxHeight == "0px")
+            {
+                MenuItems.style.maxHeight = "200px";
+            }
+            else
+            {
+                MenuItems.style.maxHeight = "0px";
+            }
+        }
+    </script>
 </body>
 
 </html>
