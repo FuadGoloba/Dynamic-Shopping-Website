@@ -27,6 +27,7 @@
                     <li><a href="/account">{{ username }}</a></li>
                     <li><a href="/search"><i class='fa fa-search'></i></a></li>
                     <li><a href="/cart"><i class='fa fa-shopping-bag'></i></a><li>
+                    
 
                 </ul>
                 {% else %}
@@ -35,7 +36,7 @@
                     <li><a href="/catalog">CATALOG</a></li>
                     <li><a href="/account">LOG IN</a></li>
                     <li><a href="/search"><i class='fa fa-search'></i></a></li>
-                    <li><a href="/cart"><i class='fa fa-shopping-bag'></i></a><li>
+                    <li><a href="/cart"><i class='fa fa-shopping-bag'></i></a>{{ session["cart"] | length }}<li>
                 </ul>
                 {% endif %}
             </nav>
@@ -43,6 +44,7 @@
             <!--<img src="/static/images/icons8-cart-64.png" height="30px" width="30px"-->
             <i class='fa fa-bars' onclick="menutoggle()"></i> <!--Adding menu icon -->
         </div>
+        <hr>
         {% if get_flashed_messages() %}
             <header>
                 <div class="alert alert-primary mb-0 text-center" role="alert">

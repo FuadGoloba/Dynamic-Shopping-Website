@@ -18,6 +18,7 @@
         <div class="col-2b">
             <h1>{{ detail["name"] }}</h1>
             <h3>{{ detail["price"] | eur }}</h3>
+
             <select>
                 <option disable selected >Size</option>
                 {% for size in sizes %}
@@ -26,11 +27,18 @@
             </select>
             
             <h4>Quantity</h4>
-            <input type="number" value="1">
-            <p></p>
-            <a href="/addtocart?id={{ detail["id"] }}" class="btn-2"> ADD TO CART</a>
+            <form action="/addtocart?id={{ detail["id"] }}" method="post">
+                <input  type="number" name="qty" value="1" min="1" max={{ detail["quantity"] }}>
+                <p></p>
+                <button class="btn-2" type="submit">ADD TO CART</button>
+            </form>
             <a href="/checkout" class="btn-2">BUY IT NOW</a>
-
+            <!--form action="/addtocart">
+                <input  type="number" name="qty" value="1">
+                <input type="submit" hidden>
+            </form>
+            <p></p>
+            <a href="/addtocart?id={{ detail["id"] }}&qty={{ request.args.get("qty") }}" class="btn-2"> ADD TO CART</a-->
             <p>{{ detail["desc"] }}</p>
         </div>
         {% endfor %}

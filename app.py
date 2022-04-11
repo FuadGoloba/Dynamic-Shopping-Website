@@ -14,7 +14,7 @@ app = Flask(__name__)
 # secret key is a random key used to encrypt your cookies and save send them to the browser.
 # The secret key is needed to keep the client-side sessions secure.
 # Secret Key is used to protect user session data in flask
-#app.config["SECRET_KEY"] = "656583ce67c0554a1f0b67a7820f0833"
+app.config["SECRET_KEY"] = "random string"
 
 # Note- Response Caching reduces the number of requests a client or proxy makes to a web server
 # Also reduces the amount of work the web server performs to generate a response
@@ -27,8 +27,10 @@ app.jinja_env.filters["eur"] = eur
 # Configuring Flask to store sessions on local filesystem as opposed to storing them inside of (digitally signed) cookies which is Flask's default.
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-#Session(app)
+Session(app)
 
+#session["cart"] = []
+#cart_item = len(session["cart"])
 
 @app.after_request
 def after_request(response):
@@ -135,17 +137,120 @@ def productDetail():
     
     return render_template("productDetail.html", sizes=sizes, product_detail=product_detail, related_products=related_products)
     
-@app.route("/addtocart")
+@app.route("/addtocart", methods=["GET", "POST"])
 def addToCart():
     
+    """Idea is to get the id of the product the user selected and update
+    the cart icon to 1, 2, 3, etc and redirect the user back to the product page 
+    to continue shopping. 
+    NOte: A situation where the user isn't logged in, we use the user's session
+    to monitor its cart items.
+    But where the user is logged in from the start, we store the user's cart in the cart db (Might not need this if I plan to use the session to monitor user's cart. I'll just have to remove the item on checkout
+    
+    Note: This function will only update cart number (i.e increase) MIght need to create a route to remove from cart"""
+    # Creating a dctionary to store the cart items and qty of a user's product in session without login in
+    if "cart" not in session:
+        session["cart"] = {}
+    
+    # Creating a list to store the qty selected of a an item in a user's cart  
+    # if "qty" not in session:
+    #     session["qty"] = []
+    
+    # Get the id of the product the user has sent to the server
+    id = request.args.get("id")
+    
+    # Map the product and the quantity selected and sent to the server via post in the dictionary
+    if request.method == "POST":
+        qty = request.form.get("qty")
+        if qty:
+            if id not in session["cart"]:
+                #session["qty"].append(qty)
+                session["cart"][id] = int(qty)
+            else:
+                session["cart"][id] += int(qty)
+    
+    # Check that the product id was sent to the server, we store it in the users cart
+    # if id and id not in session["cart"]:
+    #     session["cart"][id] = session["qty"]
+    #     #session["cart"].append(id)
+    
+    print(session["cart"])
+    #print(session["qty"])
     #flash("Added")
-    return redirect("/")
+    return redirect("/catalog")
 
+print(addToCart)
+
+
+@app.route("/updateCart", methods=["GET", "POST"])
+def updateCart():
+    
+    id = request.args.get("id")
+    
+    if request.method == "POST":
+        qty = request.form.get("qty")
+        print(qty, type(qty))
+        if qty == "0":
+            return removeCartItem()
+        if id and qty:
+            session["cart"][id] = int(qty)
+            
+    print(session["cart"])
+            
+    return redirect("/cart")
+
+print(updateCart)
+
+@app.route("/removeItem")
+def removeCartItem():
+    
+    id = request.args.get("id")
+    
+    if id:
+        del session["cart"][id]
+    
+    return redirect("/cart")
 
 @app.route("/cart")
-def Cart():
-    return 
+def cart():
     
+    """CHECK STORE EXAMPLE ON HOW TO ADD TO CART USING SESIION """
+    
+    #id = request.args.get("id")
+    # Querying the products tabe for products in the user's session cart
+    products = db.execute("""SELECT *
+                          FROM products
+                          WHERE id in (?)
+                          """,list(session["cart"].keys()))
+
+    # Create a dictionary of product id to qty in a user's session 
+    #id_qty = dict(zip(session["cart"],session["qty"])) 
+     
+    subtotal = 0
+    # CReating a key-value pair of product id to quantity for each product queried from the products table in the db
+    for product in products:
+        q = str(product["id"])
+        print(q)
+        # check that the product id exists in the user's session dictionary of {id:qty}
+        if q in session["cart"]:
+            product["qty"] = session["cart"][q]
+        # Calculating Total cost of each product in the cart    
+        product["total"] = product["price"] * int(product["qty"])
+        
+        # Calculating sub-total for all products in cart
+        subtotal += product["total"]
+        
+            
+    #qty = dict(zip(session["cart"],session["qty"]))
+    #print(id_qty)
+    print(products)
+        
+    
+#    print(products)
+    
+    return render_template("cart.html",products=products, subtotal=subtotal)
+
+print(cart)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

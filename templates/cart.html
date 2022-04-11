@@ -1,0 +1,85 @@
+{%  extends "layout.html" %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block main %}
+
+    {% if session["cart"] | length  != 0 %}
+        <div class="small-container cart-page">
+            <h1>Your Cart</h1>
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+                <hr> 
+                {% for product in products%}
+                <!--form action="/updateCart?id={{ product["id"] }}" method="post"-->
+                <tr>
+                    <td>
+                        <div class="cart-info">
+                            <img src="static/products/{{product["image"]}}">
+                            <div>
+                                <p>{{ product["name"] }}</p>
+                                <br>
+                                <a href="/removeItem?id={{ product["id"] }}">Remove</a>
+                            </div>
+                        </div>
+                        <hr>
+                    </td>
+                    <td>{{ product["price"] | eur }}</td>
+
+                    <form action="/updateCart?id={{ product["id"] }}" method="post">
+                        <td><select name="qty" onchange="this.form.submit()">
+                            <option disable selected>Qty: {{ product["qty"] }}</option>
+                                {% for qty in range(product["quantity"] + 1) %}
+                                    <option>{{ qty }}</option>
+                                {% endfor %}
+                        </select></td>
+                    </form>
+
+                    <!--form action="/updateCart?id={{ product["id"] }}" method="post">
+                        <td><input name="qty" type="number" min="1" max={{ product["quantity"] }} value={{ product["qty"] }} oninput="this.form.submit()" ></td>
+                        <input type="submit" value="update">
+                    </form-->
+
+                    <td>{{ product["total"] | eur }}</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+
+            <div class="total-price">
+                <table>
+                    <tr>
+                        <td>Subtotal</td>
+                        <td>{{ subtotal | eur }}</td>
+                    </tr>
+                </table>
+            </div>
+            <br>
+            <div class="taxes">
+                <p>Taxes and shipping are calculated at Checkout</p>
+            </div>
+            <a href="/catalog" class="btn-2">CONTINUE SHOPPING</a>
+            <!--button class="btn-2">UPDATE CART</button>
+            </form-->
+            <!--a href="/updateCart" class="btn-2">UPDATE CART</a-->
+            <a href="/checkout" class="btn-2">CHECKOUT</a>
+
+        </div>
+    
+    {% else %}
+    <div class="small-container cart-page">
+        <h1>Your Cart</h1>
+        <h3> Your cart is currently empty</h3>
+        <br>
+        <h3>Continue browsing <a href="/catalog">here.</a></h3>   
+        
+    {% endif %}
+
+{% endblock %}
