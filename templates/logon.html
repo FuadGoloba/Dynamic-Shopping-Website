@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Account
+{% endblock %}
+
+{% block main %}
+
+    {% if error %}
+        <p class=error><strong>Error:</strong>{{ error }}
+    
+    {% endif %}
+
+    <div class="account-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-2b">
+                    <!--img src="/static/products/Amy.jpg" width="100%"-->
+                    <div class="form-btn">
+                        <span> LOG IN</span>
+
+                        
+                    <form action="/" method="post">
+                        <input type="text" name="email" placeholder="E-MAIL">
+                        <input type="password" name="password" placeholder="PASSWORD">
+                        <p>
+                        <button type="submit" class="btn-2">LOG IN</button>
+                        </p>
+                        <p> 
+                            <a href="">Have you forgotten your password?</a>
+                        </p>
+                    </form>
+
+                    </div>
+
+
+                </div>
+
+                <div class="col-2b">
+                    <!--div class="form-container"-->
+                        <div class="reg">
+                            <span>REGISTER</span>
+
+                            <p>If you still do not have a KayKay account, Use this option to access the registration form</p>
+                        <p>
+                            By giving us your details, purchasing in Kaykaybrand.com will be faster and an enjoyable experience.
+                        </p>
+
+                        <a href="/register"><button type="submit" class="btn-2">CREATE ACCOUNT</button></a>
+
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

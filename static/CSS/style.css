@@ -13,6 +13,9 @@
     padding: 20px;
 }
 
+.fa.fa-search{
+    border-bottom: 1px solid black;
+}
 
 /* Styling to align navbar to right'*/
 
@@ -626,3 +629,66 @@ th:last-child{
 }
 
 
+/* ------------------logon page---------------------- */
+
+.account-page{
+    padding: 50px 0;
+}
+
+.form-container span{
+    font-weight: bold;
+    display:inline-block;
+}
+
+.form-btn{
+    display:inline-block;
+    margin-bottom: 100px;
+}
+
+.form-btn span{
+    font-weight: bolder;
+    margin: 100px 0;
+}
+
+.form-container form{
+    max-width: 300px;
+    padding: 0 20px;
+    position: absolute;
+    top: 130px;
+}
+
+form input{
+    width:50%;
+    height:30px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 1px solid black;
+
+}
+
+.reg{
+    display: inline-block;
+    margin-bottom: 120px;
+}
+
+.reg span{
+    font-weight: bolder;
+    margin: 10px 0;
+}
+
+.reg p{
+    margin-bottom: 20px;
+}
+/* p{
+    margin: 10px;
+} */
+
+
+.country{
+    border: none;
+    border-bottom: 1px solid black;
+    width: 50%;
+    padding:0px;
+    margin: 15px 0;
+    color: #555;
+}

@@ -1,4 +1,5 @@
 import os
+import csv
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -40,7 +41,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
     
     """ Show Homepage and featured collections"""
@@ -55,7 +56,30 @@ def index():
     #                         LIMIT 4""")
     #print(feature_img)
     
-    return render_template("index.html")
+    # Forget any user_id
+    #session.clear()
+    
+    error = None
+    if request.method == "POST":
+
+        #Query database for username or password entered by customer 
+        rows = db.execute("SELECT * FROM users WHERE email = ?", request.form.get("email"))
+
+
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            error = 'Invalid Credentials'
+            return render_template("logon.html",error=error)
+            #return apology("Username and password do not corrspond to any account at KayKay")
+
+        # If the account is validated
+        session["user_id"] = rows[0]["id"]
+
+        # Redirect user to website homepage
+        flash("Logged in")
+        return redirect("/")
+    
+    else:
+        return render_template("index.html")
     #return render_template("index.html",feature_img=feature_img)
 
 #print(index())
@@ -252,6 +276,11 @@ def cart():
 
 print(cart)
 
+@app.route("/logon")
+def logon():
+    
+    return render_template("/logon.html")
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -275,7 +304,7 @@ def login():
         return redirect("/")
 
     else:
-        return render_template("login.html")
+        return render_template("logon.html")
 
 
 @app.route("/logout")
@@ -289,4 +318,44 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return
+    
+    # Initialising a list to store countries
+    countries = []
+    
+    # Reading countries from csv file and appending to countries list
+    with open("countries.csv", "r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            countries.append(row["Country"])
+            
+    if request.method == 'POST':
+        
+        email = request.form.get("email")
+        password = request.form.get("password")
+        first_name = request.form.get("first_name").capitalize()
+        last_name = request.form.get("last_name").capitalize()
+        phone = request.form.get("phone")
+        address_1 = request.form.get("address_1")
+        address_2 = request.form.get("address_2")
+        city = request.form.get("city")
+        state = request.form.get("state")
+        country = request.form.get("country")
+        
+        rows = db.execute("SELECT * FROM users WHERE email = ?", request.form.get("email"))
+        
+        error = None
+        if password != request.form.get("repeat-password"):
+            error = "Passwords don't match"
+            return redirect("register.html", error=error)
+        
+        if email in [row["email"] for row in rows]:
+            error = "E-mail already exists"
+            return redirect("register.html", error=error)
+            
+        
+        # Check if the user's input is blank or the email already exist
+        
+        
+            
+    
+    return render_template("register.html",countries=countries)

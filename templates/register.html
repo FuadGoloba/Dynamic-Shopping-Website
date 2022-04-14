@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+
+    {% if error %}
+        <p class=error><strong>Error:</strong>{{ error }}
+    
+    {% endif %}
+
+    <div class="reg-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-2b">
+                    <!--img src="/static/products/Amy.jpg" width="100%"-->
+                    <div class="form-btn">
+                        <span> PERSONAL DETAILS</span>
+
+                        
+                    <form action="/" method="post">
+                        <input type="text" name="email" placeholder="E-MAIL" required>
+                        <input type="password" name="password" placeholder="PASSWORD" required>
+                        <input type="password" name="repeat-password" placeholder="REPEAT PASSWORD" required>
+                        <input type="text" name="first_name" placeholder="FIRST NAME" required>
+                        <input type="text" name="last_name" placeholder="LAST NAME" required>
+                        <input type="number" name="phone" placeholder="PHONE" required>
+                        <input type="text" name="address_1" placeholder="ADDRESS 1" required>
+                        <input type="text" name="address_2" placeholder="ADDRESS 2" required>
+                        <input type="text" name="city" placeholder="CITY" required>
+                        <input type="text" name="state" placeholder="STATE" required>
+                        <select class="country" name="country" required>
+                            <option disable selected>COUNTRY</option>
+                            {% for country in countries %}
+
+                                <option>{{ country }}</option>
+
+                            {% endfor %}
+                        </select>
+
+                        <!--input type="text" name="country" placeholder="COUNTRY" required-->
+                        
+                        <p>
+                        <button type="submit" class="btn-2">CREATE ACCOUNT</button>
+                        </p>
+                        <p> 
+                            <a href="">Have you forgotten your password?</a>
+                        </p>
+                    </form>
+
+                    </div>
+
+
+                </div>
+
+                <div class="col-2b">
+                    <!--div class="form-container"-->
+                        <div class="reg">
+
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

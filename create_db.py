@@ -11,7 +11,6 @@ def users():
 
     users_table = """CREATE TABLE IF NOT EXISTS users 
     (id INTEGER AUTO_INCREMENT NOT NULL,
-    username TEXT NOT NULL,
     hash TEXT NOT NULL,
     first_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
@@ -27,7 +26,7 @@ def users():
     """
     db.execute("DROP TABLE IF EXISTS users")
     db.execute(users_table)
-    db.execute("""CREATE UNIQUE INDEX username ON users (username)""")
+    db.execute("""CREATE UNIQUE INDEX email ON users (email)""")
 
 # Create user_payment table to store customers' cash availability details
 # Note: It is assumed that customers recharge their account on the site in order to make payments
