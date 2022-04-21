@@ -10,7 +10,7 @@ db = SQL("sqlite:///E-commerce.db")
 def users():
 
     users_table = """CREATE TABLE IF NOT EXISTS users 
-    (id INTEGER AUTO_INCREMENT NOT NULL,
+    (id INTEGER PRIMARY KEY NOT NULL,
     hash TEXT NOT NULL,
     first_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
@@ -22,7 +22,8 @@ def users():
     state VARCHAR NOT NULL,
     country VARCHAR NOT NULL,
     phone VARCHAR NOT NULL,
-    PRIMARY KEY(id))
+    mom_maiden_name VARCHAR NOT NULL,
+    born_city VARCHAR NOT NULL)
     """
     db.execute("DROP TABLE IF EXISTS users")
     db.execute(users_table)
@@ -169,7 +170,7 @@ def orders():
 def main():
     users()
     user_payment()
-    product_category()
+    #product_category()
     product_inventory()
     products()
     cart_item()

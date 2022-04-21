@@ -692,3 +692,27 @@ form input{
     margin: 15px 0;
     color: #555;
 }
+
+/* .reg-page .form-btn{
+    width: 50%;
+    float:left;
+}
+
+/* .sub-entry{
+    width: 50%;
+    float: left;
+} */
+
+.reg-page form input{
+    width:50%;
+    height:30px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+.reg-page .col-2b
+{
+    width: 50%;
+    float: left;
+}

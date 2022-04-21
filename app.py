@@ -73,6 +73,7 @@ def index():
 
         # If the account is validated
         session["user_id"] = rows[0]["id"]
+        session["first_name"] = rows[0]["first_name"]
 
         # Redirect user to website homepage
         flash("Logged in")
@@ -238,10 +239,11 @@ def removeCartItem():
 @app.route("/cart")
 def cart():
     
-    """CHECK STORE EXAMPLE ON HOW TO ADD TO CART USING SESIION """
+    """"""
     
     #id = request.args.get("id")
     # Querying the products tabe for products in the user's session cart
+    
     products = db.execute("""SELECT *
                           FROM products
                           WHERE id in (?)
@@ -251,19 +253,60 @@ def cart():
     #id_qty = dict(zip(session["cart"],session["qty"])) 
      
     subtotal = 0
-    # CReating a key-value pair of product id to quantity for each product queried from the products table in the db
+    # CReating a key-value pair of product id to quantity for each product queried from the products 
     for product in products:
         q = str(product["id"])
         print(q)
+        
         # check that the product id exists in the user's session dictionary of {id:qty}
         if q in session["cart"]:
             product["qty"] = session["cart"][q]
+            
         # Calculating Total cost of each product in the cart    
         product["total"] = product["price"] * int(product["qty"])
         
         # Calculating sub-total for all products in cart
         subtotal += product["total"]
         
+
+        user = db.execute("""SELECT *
+                        FROM users
+                        where id = ?""",
+                        session["user_id"])
+        
+        carts = db.execute("""SELECT * 
+                        FROM cart_item
+                        WHERE user_id = ?""",
+                        session["user_id"])
+        print(carts)
+        
+        # Check that a logged in user session exists
+        if len(user) != 0:
+            # if user's cart is empty, or user is adding this prpoduct to cart for the first time; then insert the product to user's cart in DB
+            if len(carts) == 0 or product["id"] not in [cart["product_id"] for cart in carts]:
+                db.execute("""INSERT INTO cart_item
+                        (user_id, product_id, quantity, total)
+                        VALUES (?,?,?,?)""",
+                        user[0]["id"], product["id"], product["qty"],product["total"])
+             
+            # User cart is not empty and user has products already in the cart DB, then update should the user update qty on that product   
+            else:
+                db.execute("""UPDATE cart_item
+                           SET quantity = ?, total = ?
+                           WHERE user_id = ?
+                           AND product_id = ?""",
+                           product["qty"],product["total"],user[0]["id"],product["id"])
+            
+            # To clear product from user's cart db if user removes product from his cart in front end
+            if product["id"] not in session["cart"]:
+                db.execute(""" DELETE 
+                           FROM cart_item
+                           WHERE product_id = ?
+                           AND user_id = ?""",
+                           product["id"],user[0]["id"])
+    
+    
+    
             
     #qty = dict(zip(session["cart"],session["qty"]))
     #print(id_qty)
@@ -280,31 +323,6 @@ print(cart)
 def logon():
     
     return render_template("/logon.html")
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-
-    # Forget any user_id
-    session.clear()
-    
-    if request.method == "POST":
-
-        #Query database for username or password entered by customer 
-        rows = db.execute("SELECT * FROM users WHERE username = ? OR WHERE email = ?", request.form.get("username"), request.form.get("email"))
-
-
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return apology("Username and password do not corrspond to any account at KayKay")
-
-        # If the account is validated
-        session["user_id"] = rows[0]["id"]
-
-        # Redirect user to website homepage
-        flash("Logged in")
-        return redirect("/")
-
-    else:
-        return render_template("logon.html")
 
 
 @app.route("/logout")
@@ -337,25 +355,88 @@ def register():
         phone = request.form.get("phone")
         address_1 = request.form.get("address_1")
         address_2 = request.form.get("address_2")
-        city = request.form.get("city")
-        state = request.form.get("state")
+        city = request.form.get("city").capitalize()
+        state = request.form.get("state").capitalize()
         country = request.form.get("country")
+        mom_maiden_name = request.form.get("question_1").capitalize()
+        born_city = request.form.get("question_2").capitalize()
         
         rows = db.execute("SELECT * FROM users WHERE email = ?", request.form.get("email"))
         
         error = None
         if password != request.form.get("repeat-password"):
             error = "Passwords don't match"
-            return redirect("register.html", error=error)
+            return render_template("register.html", error=error, countries=countries)
         
         if email in [row["email"] for row in rows]:
             error = "E-mail already exists"
-            return redirect("register.html", error=error)
-            
+            return render_template("register.html", error=error,countries=countries)
         
-        # Check if the user's input is blank or the email already exist
+        # Register user into the  db
+        #try:
+        db.execute("""INSERT INTO users 
+                       (hash, first_name, last_name, email, address_1, address_2, city, state, country, phone, mom_maiden_name, born_city)
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+                       generate_password_hash(password),first_name,last_name,email,address_1,address_2,city,state,country,phone,mom_maiden_name,born_city)
+        #except:
+        #    error = "Registration not permitted"
+        #    return render_template("register.html", error=error,countries=countries)
         
         
-            
+        flash("Registered successfully! You may now log in with your details")
+        return redirect("/logon")
     
-    return render_template("register.html",countries=countries)
+    else:
+        
+        return render_template("register.html",countries=countries)
+    
+@app.route("/passwordReset", methods=["GET", "POST"])
+def passwordReset():
+    
+    if request.method == "POST":
+        
+        email = request.form.get("email")
+        mom_maiden_name = request.form.get("question_1")
+        born_city = request.form.get("question_2")
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirmation")
+        
+        rows = db.execute(""" SELECT * 
+                         FROM users
+                         WHERE email = ? 
+                         AND mom_maiden_name = ?
+                         AND born_city = ?""",
+                         email,mom_maiden_name,born_city)
+        
+        # Check that the user exists in the database
+        error = None
+        if len(rows) != 1:
+            error = 'Invalid Credentials, could not reset password'
+            return render_template("logon.html",error=error)
+        
+        else:
+            if new_password != confirm_password:
+                error = "Passwords don't match, could not reset password"
+                return render_template("passwordReset.html",error=error)
+            
+            else:
+                # Update user;s password 
+                db.execute("""UPDATE users
+                        SET hash = ?
+                        where email = ?""",
+                        generate_password_hash(new_password),email)
+                
+                flash("Password Reset successful")
+                return redirect("/logon")
+            
+    return render_template("passwordReset.html")
+
+@app.route("/checkout", methods = ["GET", "POST"])
+@login_required
+def checkout():
+    
+    
+    
+    return ("checkout.html")
+    
+    
