@@ -1,3 +1,4 @@
+from crypt import methods
 import os
 import csv
 from flask import Flask, flash, redirect, render_template, request, session
@@ -74,6 +75,28 @@ def index():
         # If the account is validated
         session["user_id"] = rows[0]["id"]
         session["first_name"] = rows[0]["first_name"]
+        session["last_name"] = rows[0]["last_name"]
+        session["email"] = rows[0]["email"]
+        
+        
+        # Query for logged in user cart item
+        cart = db.execute("""SELECT *
+                   FROM cart_item
+                   WHERE user_id = ? """,
+                   session["user_id"])
+        
+        if "cart" not in session:
+            session["cart"] = {}
+        
+        # Update user cart in frontend
+        for item in cart:
+            product_id = str(item["product_id"])
+            quantity = item["quantity"]
+            print(product_id, type(product_id))
+            
+            session["cart"][product_id] = quantity
+            
+            
 
         # Redirect user to website homepage
         flash("Logged in")
@@ -83,7 +106,7 @@ def index():
         return render_template("index.html")
     #return render_template("index.html",feature_img=feature_img)
 
-#print(index())
+print(index)
 
 @app.route("/catalog", methods = ["GET", "POST"])
 def catalog():
@@ -233,6 +256,14 @@ def removeCartItem():
     
     if id:
         del session["cart"][id]
+        if session["user_id"] != 0:
+            # To clear product from user's cart db if user removes product from his cart in front end
+            db.execute(""" DELETE 
+                    FROM cart_item
+                    WHERE product_id = ?
+                    AND user_id = ?""",
+                    id,session["user_id"])
+
     
     return redirect("/cart")
 
@@ -256,7 +287,8 @@ def cart():
     # CReating a key-value pair of product id to quantity for each product queried from the products 
     for product in products:
         q = str(product["id"])
-        print(q)
+        print(q, type(q))
+        print(session["cart"][q])
         
         # check that the product id exists in the user's session dictionary of {id:qty}
         if q in session["cart"]:
@@ -268,7 +300,13 @@ def cart():
         # Calculating sub-total for all products in cart
         subtotal += product["total"]
         
-
+        # Creating a try and exception to force a user session (not logged in) to 0
+        try:
+            if not session["user_id"]:
+                session["user_id"] = 0    
+        except:
+            session["user_id"] = 0
+        
         user = db.execute("""SELECT *
                         FROM users
                         where id = ?""",
@@ -282,6 +320,15 @@ def cart():
         
         # Check that a logged in user session exists
         if len(user) != 0:
+            
+            # To clear product from user's cart db if user removes product from his cart in front end
+            # if product["id"] not in session["cart"]:
+            #     db.execute(""" DELETE 
+            #                FROM cart_item
+            #                WHERE product_id = ?
+            #                AND user_id = ?""",
+            #                product["id"],user[0]["id"])
+            
             # if user's cart is empty, or user is adding this prpoduct to cart for the first time; then insert the product to user's cart in DB
             if len(carts) == 0 or product["id"] not in [cart["product_id"] for cart in carts]:
                 db.execute("""INSERT INTO cart_item
@@ -297,13 +344,9 @@ def cart():
                            AND product_id = ?""",
                            product["qty"],product["total"],user[0]["id"],product["id"])
             
-            # To clear product from user's cart db if user removes product from his cart in front end
-            if product["id"] not in session["cart"]:
-                db.execute(""" DELETE 
-                           FROM cart_item
-                           WHERE product_id = ?
-                           AND user_id = ?""",
-                           product["id"],user[0]["id"])
+
+                
+        print(carts)
     
     
     
@@ -431,6 +474,104 @@ def passwordReset():
             
     return render_template("passwordReset.html")
 
+
+@app.route("/profile")
+def profile():
+    
+    return render_template("profile.html")
+
+@app.route("/account")
+def account():
+    
+    return render_template("account.html")
+
+@app.route("/changePassword", methods = ["GET", "POST"])
+def changePassword():
+    
+    if request.method == "POST":
+        
+        old_password = request.form.get("old_password")
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirmation")
+        
+        rows = db.execute(""" SELECT * 
+                         FROM users
+                         WHERE id = ? """,
+                         session["user_id"])
+        
+        # Check that the user exists in the database
+        error = None
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"],old_password):
+            error = "Current password is incorrect, could not update password"
+            return render_template("changePassword.html",error=error)
+        
+        elif old_password == new_password:
+            error = "New password must be different"
+            return render_template("changePassword.html",error=error)
+            
+        else:
+            if new_password != confirm_password:
+                error = "Passwords don't match, could not update password"
+                return render_template("changePassword.html.html",error=error)
+            
+            else:
+                # Update user;s password 
+                db.execute("""UPDATE users
+                        SET hash = ?
+                        where email = ?""",
+                        generate_password_hash(new_password),session["email"])
+                
+                flash("Password Change successful")
+                return redirect("/profile")
+        
+    
+    return render_template("changePassword.html")
+
+@app.route("/changeEmail", methods = ["GET", "POST"])
+def changeEmail():
+    
+    if request.method == "POST":
+        
+        new_email = request.form.get("new_email")
+        
+        rows = db.execute(""" SELECT * 
+                         FROM users""")
+        
+        user_row = db.execute("""SELECT *
+                              FROM users
+                              WHERE id = ?""",
+                              session["user_id"])
+        
+        error = None
+        # Check that user's password is correct
+        if len(user_row) != 1 or not check_password_hash(user_row[0]["hash"],request.form.get("password")):
+            error = "Password is incorrect, Cannot update E-mail address"
+            return render_template("changeEmail.html", error=error)
+        
+        if new_email in [row["email"] for row in rows]:
+            error = "E-mail already exists, Use a different e-mail address"
+            return render_template("changeEmail.html", error=error)
+        
+        if new_email != request.form.get("confirmation"):
+            error = "E-mail's don't match"
+            return render_template("changeEmail.html", error=error)
+        
+        # Update user's new email in DB
+        db.execute("""UPDATE users
+                   SET email = ?
+                   WHERE id = ?
+                   """,
+                   new_email,session["user_id"])
+        # Update user's session email in front end
+        session["email"] = new_email
+        
+        flash("Email Change successful")
+        return redirect("/profile")
+        
+    
+    return render_template("changeEmail.html")
+
+
 @app.route("/checkout", methods = ["GET", "POST"])
 @login_required
 def checkout():
@@ -439,4 +580,4 @@ def checkout():
     
     return ("checkout.html")
     
-    
+ 

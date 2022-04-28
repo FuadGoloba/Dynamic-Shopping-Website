@@ -693,8 +693,8 @@ form input{
     color: #555;
 }
 
-/* .reg-page .form-btn{
-    width: 50%;
+.reg-page .form-btn{
+    width: 100%;
     float:left;
 }
 
@@ -715,4 +715,34 @@ form input{
 {
     width: 50%;
     float: left;
+}
+
+/* ------------------profile page---------------------- */
+.profile
+{
+    width:100%;
+    float: left;
+    margin-bottom: 20px;
+}
+
+.profile span
+{
+    font-weight: bolder;
+}
+
+
+/* ------------------account page---------------------- */
+
+
+.account
+{
+    width: 100%;
+    float: left;
+
+}
+
+.account span
+{
+    font-weight: bolder;
+    font-size: large;
 }

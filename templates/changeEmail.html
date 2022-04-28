@@ -18,17 +18,17 @@
             <!--div class="col-2b">
                 <!--img src="/static/products/Amy.jpg" width="100%"-->
                 <div class="form-btn">
-                    <span>UPDATE PASSWORD</span>
-                        <p>Enter your current password and update to a new password</p>
+                    <span>CHANGE E-MAIL </span>
+                        <p>Enter your current Email and change to new Email</p>
 
                     
-                <form action="/changePassword" method="post">
+                <form action="/changeEmail" method="post">
                     <div class="col-2b">
-                    <input type="password" name="old_password" placeholder="CURRENT PASSWORD" required>
-                    <input type="password" name="new_password" placeholder="NEW PASSWORD" required>
-                    <input type="password" name="confirmation" placeholder="CONFIRM PASSWORD" required>
+                    <input type="password" name="password" placeholder="CURRENT PASSWORD" required>
+                    <input type="text" name="new_email" placeholder="NEW E-MAIL ADDRESS" required>
+                    <input type="text" name="confirmation" placeholder="CONFIRM NEW E-MAIL ADDRESS" required>
                     <p>
-                        <button type="submit" class="btn-2">CONTINUE</button>
+                        <button type="submit" class="btn-2">UPDATE E-MAIL</button>
                         </p>
                     </div>                    
                 </form>
