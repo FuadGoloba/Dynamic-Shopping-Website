@@ -274,11 +274,14 @@ def cart():
     
     #id = request.args.get("id")
     # Querying the products tabe for products in the user's session cart
-    
-    products = db.execute("""SELECT *
+    try:
+        products = db.execute("""SELECT *
                           FROM products
                           WHERE id in (?)
                           """,list(session["cart"].keys()))
+        
+    except:
+        products = []
 
     # Create a dictionary of product id to qty in a user's session 
     #id_qty = dict(zip(session["cart"],session["qty"])) 
@@ -571,6 +574,14 @@ def changeEmail():
     
     return render_template("changeEmail.html")
 
+@app.route("/editAddress", methods = ["GET", "POST"])
+def editAddress():
+    
+    
+    
+    return
+    
+    
 
 @app.route("/checkout", methods = ["GET", "POST"])
 @login_required

@@ -170,7 +170,7 @@ def orders():
 def main():
     users()
     user_payment()
-    #product_category()
+    product_category()
     product_inventory()
     products()
     cart_item()
