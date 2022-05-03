@@ -14,6 +14,7 @@
             <!--div class="col-2b">
                 <!--img src="/static/products/Amy.jpg" width="100%"-->
                 <div class="profile">
+
                     <span> {{ session["first_name"] }} {{ session["last_name"] }}</span>
                     <p>{{ session["email"] }}</p>
                     <br></br>
@@ -22,10 +23,10 @@
                     <p>E-mail, Password, Sign out...</p></a>
 
                     <br></br>
-                    <a href=""><span>ADDRESS</span><p>Update Shipping address</p></a>
+                    <a href="/address"><span>ADDRESS</span><p>Update Shipping address</p></a>
 
                     <br></br>
-                    <a href=""><span>ORDERS</span><p>View previous orders</p></a>
+                    <a href="/order"><span>ORDERS</span><p>View previous orders</p></a>
 
                     <br></br>
                     <a href=""><span>WALLET</span><p>View, Update</p></a>

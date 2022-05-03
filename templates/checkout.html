@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Checkout
+{% endblock %}
+
+{% block main %}
+
+    {% if error %}
+
+        <p class=error><strong>Error:</strong>{{ error }}
+    
+    {% endif %}
+
+    <div class="reg-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-2b">
+                    <!--img src="/static/products/Amy.jpg" width="100%"-->
+                    <div class="form-btn">
+                        <span> PAYMENT</span>
+                        <br></br>
+                        
+                        {% for info in user %}
+
+                        <p>Contact {{ info["phone"] }} <a href="/changeAddress"> Change</a></p>
+                        <br></br>
+                        <p>Ship to {{ info["address_1"] }}, {{ info["address_2"] }}, {{ info["city"] }}, {{ info["state"] }}, {{ info["country"] }} <a href="/changeAddress">Change</a></p>
+                        
+                        {% endfor %}
+
+                        <br></br>
+
+                        {% for wallet in user_wallet %}
+
+                            <p>Wallet balanace {{ wallet["wallet"] | eur }} <a href="/updateWallet">Update</a></p>
+
+                        {% endfor %}
+                    <!--form action="/register" method="post"-->
+                        <!--div class="col-2b"-->
+
+                        <!--/div-->
+
+                        <!--input type="text" name="country" placeholder="COUNTRY" required-->
+                        
+                        <p>
+                        <a href="/processOrder"><button type="submit" class="btn-2">COMPLETE ORDER</button></a> <a href="/cart">Return to Cart</a>
+                        </p>
+
+                    <!--/form-->
+
+                    </div>
+
+
+                </div>
+
+                <div class="col-2b">
+                    <div class="form-container">
+                        <div class="reg">
+                            <div class="small-container cart-page">
+                                <table>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                    </tr>
+                                    <hr> 
+                                    {% for product in products%}
+                                    <!--form action="/updateCart?id={{ product["id"] }}" method="post"-->
+                                    <tr>
+                                        <td>
+                                            <div class="cart-info">
+                                                <img src="static/products/{{product["image"]}}">
+                                                <div>
+                                                    <p>{{ product["name"] }}</p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </td>
+                                        <td>{{ product["price"] | eur }}</td>
+                    
+                                        <!--form action="/updateCart?id={{ product["id"] }}" method="post">
+                                            <td><input name="qty" type="number" min="1" max={{ product["quantity"] }} value={{ product["qty"] }} oninput="this.form.submit()" ></td>
+                                            <input type="submit" value="update">
+                                        </form-->
+                                    </tr>
+                                    {% endfor %}
+                    
+                                </table>
+                    
+                                <div class="total-price">
+                                    <table>
+                                        <tr>
+                                            <td>Total</td>
+                                            <td>{{ session["total"] | eur }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <br>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

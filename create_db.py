@@ -31,18 +31,16 @@ def users():
 
 # Create user_payment table to store customers' cash availability details
 # Note: It is assumed that customers recharge their account on the site in order to make payments
-def user_payment():
+def user_wallet():
 
-    user_payment_table = """CREATE TABLE IF NOT EXISTS user_payment
-    (user_id INTEGER,
-    cash NUMERIC NOT NULL DEFAULT 100.00,
-    order_id INTEGER NOT NULL,
+    user_wallet_table = """CREATE TABLE IF NOT EXISTS user_wallet
+    (user_id INTEGER NOT NULL,
+    wallet NUMERIC NOT NULL DEFAULT 100.00,
     FOREIGN KEY(user_id) REFERENCES users(id)
-    FOREIGN KEY(order_id) REFERENCES orders(id)
     )"""
 
-    db.execute("DROP TABLE IF EXISTS user_payment")
-    db.execute(user_payment_table)
+    db.execute("DROP TABLE IF EXISTS user_wallet")
+    db.execute(user_wallet_table)
 
 # CReate produc_category table to store different product categories
 def product_category():
@@ -153,13 +151,11 @@ def cart_item():
 def orders():
 
     orders_table = """CREATE TABLE IF NOT EXISTS orders
-    (id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
+    (user_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
     total DECIMAL NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
     FOREIGN KEY(product_id) REFERENCES products(id)
     )"""
@@ -168,12 +164,12 @@ def orders():
     db.execute(orders_table)
 
 def main():
-    users()
-    user_payment()
-    product_category()
-    product_inventory()
-    products()
-    cart_item()
+    #users()
+    #user_wallet()
+    # product_category()
+    # product_inventory()
+    # products()
+    #cart_item()
     orders()
 
 if __name__ == "__main__":

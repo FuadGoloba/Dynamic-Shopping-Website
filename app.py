@@ -4,8 +4,10 @@ import csv
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import *
 
-from import_functions import apology, login_required, eur
+
+from import_functions import apology, login_required, eur, list_of_countries, get_user, get_cart, get_wallet
 from create_db import db
 
 
@@ -78,12 +80,8 @@ def index():
         session["last_name"] = rows[0]["last_name"]
         session["email"] = rows[0]["email"]
         
-        
         # Query for logged in user cart item
-        cart = db.execute("""SELECT *
-                   FROM cart_item
-                   WHERE user_id = ? """,
-                   session["user_id"])
+        cart = get_cart()
         
         if "cart" not in session:
             session["cart"] = {}
@@ -97,7 +95,6 @@ def index():
             session["cart"][product_id] = quantity
             
             
-
         # Redirect user to website homepage
         flash("Logged in")
         return redirect("/")
@@ -279,7 +276,6 @@ def cart():
                           FROM products
                           WHERE id in (?)
                           """,list(session["cart"].keys()))
-        
     except:
         products = []
 
@@ -303,6 +299,8 @@ def cart():
         # Calculating sub-total for all products in cart
         subtotal += product["total"]
         
+    
+        
         # Creating a try and exception to force a user session (not logged in) to 0
         try:
             if not session["user_id"]:
@@ -310,15 +308,12 @@ def cart():
         except:
             session["user_id"] = 0
         
-        user = db.execute("""SELECT *
-                        FROM users
-                        where id = ?""",
-                        session["user_id"])
+        # Get user info
+        user = get_user()
         
-        carts = db.execute("""SELECT * 
-                        FROM cart_item
-                        WHERE user_id = ?""",
-                        session["user_id"])
+        # Get user's cart
+        carts = get_cart()
+        
         print(carts)
         
         # Check that a logged in user session exists
@@ -346,10 +341,14 @@ def cart():
                            WHERE user_id = ?
                            AND product_id = ?""",
                            product["qty"],product["total"],user[0]["id"],product["id"])
+                
+    
             
 
                 
         print(carts)
+        
+    session["total"] = subtotal
     
     
     
@@ -382,15 +381,9 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    
-    # Initialising a list to store countries
-    countries = []
-    
-    # Reading countries from csv file and appending to countries list
-    with open("countries.csv", "r") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            countries.append(row["Country"])
+
+    # Get list of countries    
+    countries = list_of_countries()
             
     if request.method == 'POST':
         
@@ -406,6 +399,7 @@ def register():
         country = request.form.get("country")
         mom_maiden_name = request.form.get("question_1").capitalize()
         born_city = request.form.get("question_2").capitalize()
+        wallet = request.form.get("wallet")
         
         rows = db.execute("SELECT * FROM users WHERE email = ?", request.form.get("email"))
         
@@ -424,6 +418,11 @@ def register():
                        (hash, first_name, last_name, email, address_1, address_2, city, state, country, phone, mom_maiden_name, born_city)
                        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
                        generate_password_hash(password),first_name,last_name,email,address_1,address_2,city,state,country,phone,mom_maiden_name,born_city)
+        
+        db.execute("""INSERT INTO user_wallet
+                   (user_id, wallet)
+                   VALUES (?,?)""",
+                   len(rows) + 1,wallet)
         #except:
         #    error = "Registration not permitted"
         #    return render_template("register.html", error=error,countries=countries)
@@ -497,10 +496,7 @@ def changePassword():
         new_password = request.form.get("new_password")
         confirm_password = request.form.get("confirmation")
         
-        rows = db.execute(""" SELECT * 
-                         FROM users
-                         WHERE id = ? """,
-                         session["user_id"])
+        rows = get_user()
         
         # Check that the user exists in the database
         error = None
@@ -540,10 +536,7 @@ def changeEmail():
         rows = db.execute(""" SELECT * 
                          FROM users""")
         
-        user_row = db.execute("""SELECT *
-                              FROM users
-                              WHERE id = ?""",
-                              session["user_id"])
+        user_row = get_user()
         
         error = None
         # Check that user's password is correct
@@ -574,12 +567,32 @@ def changeEmail():
     
     return render_template("changeEmail.html")
 
-@app.route("/editAddress", methods = ["GET", "POST"])
-def editAddress():
+@app.route("/address")
+def address():
     
+    # calling function to query user info
+    user_info = get_user()
+        
+    return render_template("address.html", user_info=user_info)
+
+@app.route("/changeAddress", methods = ["GET", "POST"])
+def changeAddress():
     
+    # Get list of countries to render
+    countries = list_of_countries()
     
-    return
+    # Update user's address information
+    if request.method == "POST":
+        
+        db.execute("""UPDATE users
+                   SET address_1 = ?, address_2 = ?, city = ?, state = ?, country = ?, phone = ?
+                   WHERE id = ?""",
+                   request.form.get("address_1"), request.form.get("address_2"), request.form.get("city"), request.form.get("state"), request.form.get("country"),request.form.get("phone"),
+                   session["user_id"])
+        
+        return redirect("/profile")
+    
+    return render_template("changeAddress.html", countries=countries)
     
     
 
@@ -587,8 +600,90 @@ def editAddress():
 @login_required
 def checkout():
     
+    user = get_user()
     
+    user_wallet = get_wallet()
     
-    return ("checkout.html")
+    products = db.execute("""SELECT *
+                          FROM products
+                          WHERE id in (?)
+                          """,list(session["cart"].keys()))
+    
+    return render_template("checkout.html", user=user, user_wallet=user_wallet,products=products)
     
  
+@app.route("/processOrder")
+def processOrder():
+    
+    # Get user wallet info
+    user_wallet = get_wallet()
+    
+    # Ensure that user has enough in wallet to clear cart items
+    if session["total"] > user_wallet[0]["wallet"]:
+        
+        flash("Insufficient balance in Wallet")
+        return redirect("/checkout")
+    
+    # Update user wallet balance
+    balance = user_wallet[0]["wallet"] - session["total"]
+    db.execute("""UPDATE user_wallet
+               SET wallet = ?
+               WHERE user_id = ?""",
+               balance, session["user_id"])  
+    
+    # Inserting final cart items into orders table to process order
+    cart = get_cart()
+    for item in cart:
+    
+        db.execute("""INSERT INTO orders
+                (user_id, product_id, quantity, total)
+                VALUES(?,?,?,?)""",
+                session["user_id"], item["product_id"], item["quantity"], item["total"])
+        
+    # Deleting items from users cart after processing order
+    session["cart"] = {}
+    db.execute("""DELETE 
+               FROM cart_item
+               WHERE user_id = ?""",
+               session["user_id"])  
+    
+    return render_template("processOrder.html")
+
+
+@app.route("/order", methods=["GET","POST"])
+def order():
+    
+    order_dates = db.execute("""SELECT 
+                        user_id, product_id, SUM(total) AS total, DATE(created_at) AS created_date
+                        FROM orders
+                        WHERE user_id = ?
+                        GROUP BY created_date""",
+                        session["user_id"])
+    
+    p = [x["product_id"] for x in order_dates]
+    q = [(i["created_date"], type(i)) for i in order_dates]
+    
+    print(q)
+    
+    products = db.execute("""SELECT *
+                        FROM products
+                        WHERE id in (?)""",
+                        p)
+    
+    return render_template("order.html", order_dates=order_dates, products=products)
+
+print(order)
+
+# @app.template_filter('strftime')
+# def _jinja2_filter_datetime(date, fmt=None):
+#     date=dateutil.parser.parse(date)
+#     native = date.replace(tzinfo=None)
+#     format = """%b%d"""
+#     return native.strftime(format)
+
+@app.template_filter('strftime')
+def _jinja2_filter_datetime(date, fmt=None):
+    if fmt:
+        return date.strftime(fmt)
+    else:
+        return date.strftime('%b%d')

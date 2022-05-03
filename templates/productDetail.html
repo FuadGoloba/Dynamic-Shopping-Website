@@ -32,13 +32,15 @@
                 <p></p>
                 <button class="btn-2" type="submit">ADD TO CART</button>
             </form>
-            <a href="/checkout" class="btn-2">BUY IT NOW</a>
+            
+            <!--a href="/addtocart" class="btn-2">BUY IT NOW</a-->
             <!--form action="/addtocart">
                 <input  type="number" name="qty" value="1">
                 <input type="submit" hidden>
             </form>
             <p></p>
             <a href="/addtocart?id={{ detail["id"] }}&qty={{ request.args.get("qty") }}" class="btn-2"> ADD TO CART</a-->
+            <p><h3>Product Description</h3>
             <p>{{ detail["desc"] }}</p>
         </div>
         {% endfor %}

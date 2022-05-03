@@ -1,9 +1,11 @@
 import os
 import requests
 import urllib.parse
+import csv
 
-from flask import redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session
 from functools import wraps
+from create_db import db
 
 def apology(message, code=400):
     """Render message as an apology to user.
@@ -44,3 +46,46 @@ def login_required(f):
 def eur(value):
     """Format value as EUR."""
     return f"€{value:,.2f}"
+
+# Read list of countries from csv
+def  list_of_countries():
+
+    countries = []
+    
+    # Reading countries from csv file and appending to countries list
+    with open("countries.csv", "r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            countries.append(row["Country"])
+            
+    return countries
+
+def get_user():
+    
+    #Get user's address
+    user = db.execute("""SELECT * 
+                          FROM users
+                          WHERE id = ?""",
+                          session["user_id"])
+    
+    return user
+
+def get_cart():
+    
+    # get user's cart item
+    cart = db.execute("""SELECT *
+                   FROM cart_item
+                   WHERE user_id = ? """,
+                   session["user_id"])
+    return cart
+
+
+def get_wallet():
+    
+    user_wallet = db.execute("""SELECT * 
+                             FROM user_wallet
+                             WHERE user_id = ?""",
+                             session["user_id"])
+    
+    return user_wallet
+

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+    Address
+
+{% endblock %}
+
+{% block main %}
+
+<div class="address-page">
+    <div class="container">
+        <div class="row">
+            <!--div class="col-2b">
+                <!--img src="/static/products/Amy.jpg" width="100%"-->
+                <div class="address">
+                    <span> ADDRESS </span>
+                    <br></br>
+                    {% for user in user_info %}
+                    <span> {{ user["first_name"] }} {{ user["last_name"] }}</span>
+                    <p> {{ user["address_1"] }}</p>
+                    <p> {{ user["address_2"] }}</p>
+                    <p> {{ user["city"] }}</p>
+                    <p> {{ user["state"] }}</p>
+                    <p> {{ user["country"] }}</p>
+                    <p> {{ user["phone"] }}</p>
+                    {% endfor %}
+                    <br></br>
+                    <a href="/changeAddress"><button type="submit" class="btn-2">Change Address</button></a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

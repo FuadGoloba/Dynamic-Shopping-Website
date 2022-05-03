@@ -746,3 +746,19 @@ form input{
     font-weight: bolder;
     font-size: large;
 }
+
+
+/* ------------------address page---------------------- */
+
+.address
+{
+    width: 100%;
+    float: left;
+
+}
+
+.address span
+{
+    font-weight: bolder;
+    font-size: large;
+}
