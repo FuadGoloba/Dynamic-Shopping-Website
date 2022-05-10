@@ -1,46 +1,28 @@
 {%  extends "layout.html" %}
 
 {% block title %}
-    Cart
+    Order
 {% endblock %}
 
 {% block main %}
 
-        <div class="small-container cart-page">
-            <h1>Orders</h1>
-            <table>
-                <tr>
-                    {% for date in order_dates %}
-                        <th>{{ date["created_date"] | strftime}}</th>
-                    {% endfor %}
-                </tr>
-                <hr> 
-                {% for product in products %}
-                <!--form action="/updateCart?id={{ product["id"] }}" method="post"-->
-                <tr>
-                    <td>
-                        <div class="cart-info">
-                            <img src="static/products/{{product["image"]}}">
-                            <div>
-                                <p>{{ product["name"] }}</p>
-                                <br>
-                            </div>
-                        </div>
-                        <hr>
-                    </td>
+    <div class="small-container order-page">
+        <h1> Your Orders</h1>
+            {% for order in user_order %}
+                <hr>
+                {{ order["created_date"] | strftime }}
 
-                    <!--form action="/updateCart?id={{ product["id"] }}" method="post">
-                        <td><select name="qty" onchange="this.form.submit()">
-                            <option disable selected>Qty: {{ product["qty"] }}</option>
-                                {% for qty in range(product["quantity"] + 1) %}
-                                    <option>{{ qty }}</option>
-                                {% endfor %}
-                        </select></td>
-                    </form-->
-                </tr>
-                {% endfor %}
+                <div class="order-info">
+                    <p>{{ order["total"] | eur }} <a href="/viewOrder?date={{ order["created_date"] }}" onclick="this.closest('form').submit();return false;">VIEW ORDER</a></p>
+                    <br>
+                    <img src="static/products/{{ order["image"] }}">
+                    <div>
 
-            </table>
-        </div>
+                    </div>
+                </div>
+        
+            {% endfor %}
+
+    </div>
 
 {% endblock %}

@@ -87,5 +87,5 @@ def get_wallet():
                              WHERE user_id = ?""",
                              session["user_id"])
     
-    return user_wallet
+    return user_wallet[0]
 

@@ -166,11 +166,11 @@ def orders():
 def main():
     #users()
     #user_wallet()
-    # product_category()
+    #product_category()
     # product_inventory()
-    # products()
+    #products()
     #cart_item()
-    orders()
+    #orders()
 
 if __name__ == "__main__":
     main()

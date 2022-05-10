@@ -451,7 +451,7 @@ ul {
         line-height: 32px;
     }
 
-    .cart-info p{
+    .order-info p{
         display: none;
     }
 }
@@ -761,4 +761,60 @@ form input{
 {
     font-weight: bolder;
     font-size: large;
+}
+
+/* ----------------------- order pag -------------------- */
+.order-page{
+    margin:50px auto;
+}
+
+.order-page h1{
+    margin-bottom: 50px;
+    color: #555;
+}
+
+
+/* .order-info{
+    display: flex;
+    flex-wrap: wrap;
+} */
+.order-info img{
+    width: 13%;
+    height: 7%;
+    padding: 10px;
+}
+
+.order-info p{
+    color: black;
+    font-size: 13px;
+}
+
+/*-------------------------------View Order page -----------------------------*/
+/* .deliv-date span{
+
+    width: 50%;
+    float:left;
+} */
+
+.o-page{
+    margin:0px ao;
+}
+
+.o-page h1{
+    margin-bottom: 0px;
+    color: #555;
+}
+
+.o-info{
+    display: flex;
+    flex-wrap: wrap;
+}
+.o-info img{
+    width: 18%;
+    height: 9%;
+    padding: 10px;
+}
+
+.o-info p{
+    font-size: 15px;
 }

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+    Wallet
+
+{% endblock %}
+
+{% block main %}
+
+<div class="address-page">
+    <div class="container">
+        <div class="row">
+            <!--div class="col-2b">
+                <!--img src="/static/products/Amy.jpg" width="100%"-->
+                <div class="address">
+                    <span> WALLET </span>
+                    <br></br>
+                
+                    <span> Your current balance is {{ user_wallet["wallet"] | eur }}</span>
+
+                    <hr>
+
+                    <span> Top Up below </span>
+
+                    <form action="/updateWallet" method="post">
+
+                        <input type="number" name="wallet" placeholder="WALLET TOP-UP (€)" min="1" max="1000">
+
+                        <br>
+
+                        <a href="/updateWallet"><button type="submit" class="btn-2">Update Wallet</button></a>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

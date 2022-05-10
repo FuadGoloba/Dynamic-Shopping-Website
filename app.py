@@ -5,6 +5,7 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import *
+import dateutil.parser
 
 
 from import_functions import apology, login_required, eur, list_of_countries, get_user, get_cart, get_wallet
@@ -43,6 +44,15 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
+
+@app.template_filter('strftime')
+def _jinja2_filter_datetime(date, fmt=None):
+    date=dateutil.parser.parse(date)
+    native = date.replace(tzinfo=None)
+    format = """%A %d, %b %Y"""
+    return native.strftime(format)
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -419,10 +429,13 @@ def register():
                        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
                        generate_password_hash(password),first_name,last_name,email,address_1,address_2,city,state,country,phone,mom_maiden_name,born_city)
         
+        # Getting all users count 
+        all_user = db.execute("SELECT * FROM users")
+        # Updating user wallet at registration
         db.execute("""INSERT INTO user_wallet
                    (user_id, wallet)
                    VALUES (?,?)""",
-                   len(rows) + 1,wallet)
+                   len(all_user) + 1, wallet)
         #except:
         #    error = "Registration not permitted"
         #    return render_template("register.html", error=error,countries=countries)
@@ -653,37 +666,65 @@ def processOrder():
 @app.route("/order", methods=["GET","POST"])
 def order():
     
-    order_dates = db.execute("""SELECT 
-                        user_id, product_id, SUM(total) AS total, DATE(created_at) AS created_date
+    user_order = db.execute("""SELECT 
+                        products.image, orders.product_id, SUM(orders.total) AS total, DATE(orders.created_at) AS created_date
                         FROM orders
+                        JOIN products
+                        ON orders.product_id = products.id
                         WHERE user_id = ?
                         GROUP BY created_date""",
                         session["user_id"])
     
-    p = [x["product_id"] for x in order_dates]
-    q = [(i["created_date"], type(i)) for i in order_dates]
+    # p = [x["product_id"] for x in order_dates]
+    # q = [(i["created_date"], type(i)) for i in order_dates]
     
-    print(q)
+    # print(q)
     
-    products = db.execute("""SELECT *
-                        FROM products
-                        WHERE id in (?)""",
-                        p)
+    # products = db.execute("""SELECT *
+    #                     FROM products
+    #                     WHERE id in (?)""",
+    #                     p)
     
-    return render_template("order.html", order_dates=order_dates, products=products)
+    return render_template("order.html", user_order=user_order)
 
-print(order)
 
-# @app.template_filter('strftime')
-# def _jinja2_filter_datetime(date, fmt=None):
-#     date=dateutil.parser.parse(date)
-#     native = date.replace(tzinfo=None)
-#     format = """%b%d"""
-#     return native.strftime(format)
+@app.route("/viewOrder", methods = ["GET", "POST"])
+def viewOrder():
+    
+    order_date = request.args.get("date")
+    print(order_date)
+    
+    order =  db.execute("""SELECT 
+                        products.image, products.name, products.desc, orders.product_id, orders.total, DATE(orders.created_at) AS created_date
+                        FROM orders
+                        JOIN products
+                        ON orders.product_id = products.id
+                        WHERE user_id = ?
+                        AND created_date = ?""",
+                        session["user_id"], order_date)
+    
+    print(order)
+    
+    
+    return render_template("viewOrder.html", order=order)
+print(viewOrder)
 
-@app.template_filter('strftime')
-def _jinja2_filter_datetime(date, fmt=None):
-    if fmt:
-        return date.strftime(fmt)
-    else:
-        return date.strftime('%b%d')
+
+@app.route("/updateWallet", methods = ["GET","POST"])
+def updateWallet():
+    
+    user_wallet = get_wallet()
+    
+    if request.method == "POST":
+        
+        wallet = user_wallet["wallet"] + float(request.form.get("wallet"))
+        
+        db.execute("""UPDATE user_wallet
+                   SET wallet = ?
+                   WHERE user_id = ?""",
+                   wallet, session["user_id"])
+        
+        return redirect("/updateWallet")
+        
+    
+    return render_template("updateWallet.html", user_wallet=user_wallet)

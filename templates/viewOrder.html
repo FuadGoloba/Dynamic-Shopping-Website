@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    View Order
+{% endblock %}
+
+{% block main %}
+
+
+    <div class="reg-page">
+        <div class="container">
+            DETAILS
+            <div class="row">
+                
+                {% for item in order %}
+                <hr>
+                <div class="col-2b">
+                    <br>
+                    <!--img src="/static/products/Amy.jpg" width="100%"-->
+                    <div class="deliv-date">
+                        <p></p>
+                        
+                        <span>Delivered on  {{ item["created_date"] | strftime }}</span>
+                        <p></p>
+                        <!--br></br-->
+                    </div>
+                
+
+                </div>
+
+                <hr>
+
+                <div class="col-2b">
+                    <div class="form-container">
+                        <div class="reg">
+                            <div class="small-container o-page">
+                                <table>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                    </tr>
+                                    <hr> 
+                                    
+                                    <tr>
+                                        <td>
+                                            <div class="o-info">
+                                                <img src="static/products/{{item["image"]}}">
+                                                <div>
+                                                    <p>{{ item["name"] }}</p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </td>
+                                        <td>{{ item["total"] | eur }}</td>
+                    
+                                    </tr>
+                                    
+                    
+                                </table>
+                    
+                                <div class="total-price">
+                                    <table>
+                                        <tr>
+                                            <td>Total</td>
+                                            <td>{{ item["total"] | eur }}</td>
+                                        </tr>
+                                    </table>
+                                
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
