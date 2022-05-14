@@ -70,7 +70,7 @@
                                             </div>
                                             <hr>
                                         </td>
-                                        <td>{{ product["price"] | eur }}</td>
+                                        <td>{{ product["total"] | eur }}</td>
                     
                                         <!--form action="/updateCart?id={{ product["id"] }}" method="post">
                                             <td><input name="qty" type="number" min="1" max={{ product["quantity"] }} value={{ product["qty"] }} oninput="this.form.submit()" ></td>

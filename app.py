@@ -433,9 +433,9 @@ def register():
         all_user = db.execute("SELECT * FROM users")
         # Updating user wallet at registration
         db.execute("""INSERT INTO user_wallet
-                   (user_id, wallet)
-                   VALUES (?,?)""",
-                   len(all_user) + 1, wallet)
+                   (wallet)
+                   VALUES (?)""",
+                    wallet)
         #except:
         #    error = "Registration not permitted"
         #    return render_template("register.html", error=error,countries=countries)
@@ -608,7 +608,6 @@ def changeAddress():
     return render_template("changeAddress.html", countries=countries)
     
     
-
 @app.route("/checkout", methods = ["GET", "POST"])
 @login_required
 def checkout():
@@ -617,13 +616,21 @@ def checkout():
     
     user_wallet = get_wallet()
     
-    products = db.execute("""SELECT *
-                          FROM products
-                          WHERE id in (?)
-                          """,list(session["cart"].keys()))
+    # products = db.execute("""SELECT *
+    #                       FROM products
+    #                       WHERE id in (?)
+    #                       """,list(session["cart"].keys()))
+    
+    products = db.execute("""SELECT cart_item.quantity, cart_item.total, products.name, products.desc, products.image
+                          FROM cart_item
+                          JOIN products
+                          ON products.id = cart_item.product_id
+                          WHERE cart_item.user_id = ?""",
+                          session["user_id"])
+    #print(products)
     
     return render_template("checkout.html", user=user, user_wallet=user_wallet,products=products)
-    
+print(checkout)
  
 @app.route("/processOrder")
 def processOrder():
@@ -635,7 +642,7 @@ def processOrder():
     if session["total"] > user_wallet[0]["wallet"]:
         
         flash("Insufficient balance in Wallet")
-        return redirect("/checkout")
+        return redirect("/updateWallet")
     
     # Update user wallet balance
     balance = user_wallet[0]["wallet"] - session["total"]
@@ -717,7 +724,7 @@ def updateWallet():
     
     if request.method == "POST":
         
-        wallet = user_wallet["wallet"] + float(request.form.get("wallet"))
+        wallet = user_wallet[0]["wallet"] + float(request.form.get("wallet"))
         
         db.execute("""UPDATE user_wallet
                    SET wallet = ?
@@ -727,4 +734,4 @@ def updateWallet():
         return redirect("/updateWallet")
         
     
-    return render_template("updateWallet.html", user_wallet=user_wallet)
+    return render_template("updateWallet.html", user_wallet=user_wallet[0])

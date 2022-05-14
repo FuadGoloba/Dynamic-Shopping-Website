@@ -34,10 +34,11 @@ def users():
 def user_wallet():
 
     user_wallet_table = """CREATE TABLE IF NOT EXISTS user_wallet
-    (user_id INTEGER NOT NULL,
-    wallet NUMERIC NOT NULL DEFAULT 100.00,
-    FOREIGN KEY(user_id) REFERENCES users(id)
+    (user_id INTEGER PRIMARY KEY NOT NULL,
+    wallet NUMERIC NOT NULL 
     )"""
+
+    #FOREIGN KEY(user_id) REFERENCES users(id)
 
     db.execute("DROP TABLE IF EXISTS user_wallet")
     db.execute(user_wallet_table)
@@ -164,13 +165,13 @@ def orders():
     db.execute(orders_table)
 
 def main():
-    #users()
-    #user_wallet()
+    users()
+    user_wallet()
     #product_category()
-    # product_inventory()
+    #product_inventory()
     #products()
     #cart_item()
-    #orders()
+    orders()
 
 if __name__ == "__main__":
     main()

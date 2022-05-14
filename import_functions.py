@@ -38,7 +38,8 @@ def login_required(f):
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
+        print(session.get("user_id"))
+        if session.get("user_id") is None or session.get("user_id") == 0:
             return redirect("/logon")
         return f(*args, **kwargs)
     return decorated_function
@@ -87,5 +88,5 @@ def get_wallet():
                              WHERE user_id = ?""",
                              session["user_id"])
     
-    return user_wallet[0]
+    return user_wallet
 
