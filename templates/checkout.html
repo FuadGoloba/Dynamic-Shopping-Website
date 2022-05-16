@@ -17,9 +17,9 @@
                         
                         {% for info in user %}
 
-                        <p>Contact {{ info["phone"] }} <a href="/changeAddress"> Change</a></p>
+                        <p>Contact {{ info["phone"] }} <a href="/changeAddress" style="color:red;"> Change</a></p>
                         <br></br>
-                        <p>Ship to {{ info["address_1"] }}, {{ info["address_2"] }}, {{ info["city"] }}, {{ info["state"] }}, {{ info["country"] }} <a href="/changeAddress">Change</a></p>
+                        <p>Ship to {{ info["address_1"] }}, {{ info["address_2"] }}, {{ info["city"] }}, {{ info["state"] }}, {{ info["country"] }} <a href="/changeAddress" style="color:red;">Change</a></p>
                         
                         {% endfor %}
 
@@ -27,7 +27,7 @@
 
                         {% for wallet in user_wallet %}
 
-                            <p>Wallet balanace {{ wallet["wallet"] | eur }} <a href="/updateWallet">Update</a></p>
+                            <p>Wallet balanace {{ wallet["wallet"] | eur }} <a href="/updateWallet" style="color:red;">Update</a></p>
 
                         {% endfor %}
                     <!--form action="/register" method="post"-->
@@ -38,7 +38,7 @@
                         <!--input type="text" name="country" placeholder="COUNTRY" required-->
                         
                         <p>
-                        <a href="/processOrder"><button type="submit" class="btn-2">COMPLETE ORDER</button></a> <a href="/cart">Return to Cart</a>
+                        <a href="/processOrder"><button type="submit" class="btn-2">COMPLETE ORDER</button></a> <a href="/cart" style="color:red;">Return to Cart</a>
                         </p>
 
                     <!--/form-->
@@ -65,7 +65,7 @@
                                             <div class="cart-info">
                                                 <img src="static/products/{{product["image"]}}">
                                                 <div>
-                                                    <p>{{ product["name"] }}</p>
+                                                    <p>{{ product["name"] }} (x{{ product["quantity"] }})</p>
                                                 </div>
                                             </div>
                                             <hr>

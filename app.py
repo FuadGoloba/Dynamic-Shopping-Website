@@ -1,7 +1,7 @@
 from crypt import methods
 import os
 import csv
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import *
@@ -114,6 +114,22 @@ def index():
     #return render_template("index.html",feature_img=feature_img)
 
 print(index)
+
+@app.route("/search", methods = ["GET", "POST"])
+def search():
+    
+    q = request.args.get("q")
+    if q:
+        products = db.execute("""SELECT *
+                              FROM products
+                              WHERE name
+                              LIKE ?
+                              LIMIT 20""",
+                              "%" + q + "%")
+    else:
+        products = []
+        
+    return jsonify(products)
 
 @app.route("/catalog", methods = ["GET", "POST"])
 def catalog():
@@ -702,7 +718,7 @@ def viewOrder():
     print(order_date)
     
     order =  db.execute("""SELECT 
-                        products.image, products.name, products.desc, orders.product_id, orders.total, DATE(orders.created_at) AS created_date
+                        products.image, products.name, products.desc, orders.quantity, orders.product_id, orders.total, DATE(orders.created_at) AS created_date
                         FROM orders
                         JOIN products
                         ON orders.product_id = products.id

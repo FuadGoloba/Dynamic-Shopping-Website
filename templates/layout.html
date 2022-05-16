@@ -26,6 +26,26 @@
                     <li><a href="/catalog">CATALOG</a></li>
                     <li><a href="/profile">{{ session["first_name"] }}</a></li>
                     <li><a href="/search"><i class='fa fa-search'></i></a></li>
+                    <li><input autocomplete="off" autofocus placeholder="SEARCH" type="text">
+                        <ul></ul>
+
+                        <script>
+
+                            let input = document.querySelector('input');
+                            input.addEventListener('input', async function() {
+                                let response = await fetch("/search?q=" + input.value);
+                                let products = await response.json();
+                                let html = "";
+                                for (let id in products) {
+                                    let name = products[id].name.replace('<', '&lt;').replace('&','&amp;');
+                                    html += '<li>' + name + '</li>';
+                                }
+                                document.querySelector('ul').innerHTML = html;
+                            });
+
+                        </script>
+                        
+                    </li>
                     <li><a href="/cart"><i class='fa fa-shopping-bag'></i>{{ session["cart"] | length }}</a><li>
                     
 
