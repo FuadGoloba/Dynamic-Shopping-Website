@@ -309,7 +309,7 @@ def cart():
         
     
         
-        # Creating a try and exception to force a user session (not logged in) to 0
+        # forcing a user session (not logged in) to 0
         try:
             if not session["user_id"]:
                 session["user_id"] = 0    
@@ -327,13 +327,6 @@ def cart():
         # Check that a logged in user session exists
         if len(user) != 0:
             
-            # To clear product from user's cart db if user removes product from his cart in front end
-            # if product["id"] not in session["cart"]:
-            #     db.execute(""" DELETE 
-            #                FROM cart_item
-            #                WHERE product_id = ?
-            #                AND user_id = ?""",
-            #                product["id"],user[0]["id"])
             
             # if user's cart is empty, or user is adding this prpoduct to cart for the first time; then insert the product to user's cart in DB
             if len(carts) == 0 or product["id"] not in [cart["product_id"] for cart in carts]:
@@ -350,27 +343,11 @@ def cart():
                            AND product_id = ?""",
                            product["qty"],product["total"],user[0]["id"],product["id"])
                 
-    
-            
-
-                
-        print(carts)
-        
+    # Update user's total        
     session["total"] = subtotal
-    
-    
-    
-            
-    #qty = dict(zip(session["cart"],session["qty"]))
-    #print(id_qty)
-    print(products)
         
-    
-#    print(products)
-    
     return render_template("cart.html",products=products, subtotal=subtotal)
 
-print(cart)
 
 @app.route("/logon")
 def logon():
@@ -409,6 +386,7 @@ def register():
         born_city = request.form.get("question_2").capitalize()
         wallet = request.form.get("wallet")
         
+        # Query user info
         rows = db.execute("SELECT * FROM users WHERE email = ?", request.form.get("email"))
         
         error = None
@@ -434,10 +412,6 @@ def register():
                    (wallet)
                    VALUES (?)""",
                     wallet)
-        #except:
-        #    error = "Registration not permitted"
-        #    return render_template("register.html", error=error,countries=countries)
-        
         
         flash("Registered successfully! You may now log in with your details")
         return redirect("/logon")
@@ -445,6 +419,7 @@ def register():
     else:
         
         return render_template("register.html",countries=countries)
+    
     
 @app.route("/passwordReset", methods=["GET", "POST"])
 def passwordReset():
@@ -507,6 +482,7 @@ def changePassword():
         new_password = request.form.get("new_password")
         confirm_password = request.form.get("confirmation")
         
+        # Query user info
         rows = get_user()
         
         # Check that the user exists in the database
@@ -680,16 +656,6 @@ def order():
                         GROUP BY created_date""",
                         session["user_id"])
     
-    # p = [x["product_id"] for x in order_dates]
-    # q = [(i["created_date"], type(i)) for i in order_dates]
-    
-    # print(q)
-    
-    # products = db.execute("""SELECT *
-    #                     FROM products
-    #                     WHERE id in (?)""",
-    #                     p)
-    
     return render_template("order.html", user_order=user_order)
 
 
@@ -707,9 +673,7 @@ def viewOrder():
                         WHERE user_id = ?
                         AND created_date = ?""",
                         session["user_id"], order_date)
-    
-    print(order)
-    
+        
     
     return render_template("viewOrder.html", order=order)
 print(viewOrder)
