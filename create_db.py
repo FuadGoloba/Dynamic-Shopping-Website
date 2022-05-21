@@ -166,7 +166,7 @@ def orders():
 
 def main():
     users()
-    #user_wallet()
+    user_wallet()
     #product_category()
     #product_inventory()
     #products()
