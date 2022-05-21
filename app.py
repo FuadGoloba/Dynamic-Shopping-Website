@@ -68,7 +68,7 @@ def index():
         #Query database for username or password entered by customer 
         rows = db.execute("SELECT * FROM users WHERE email = ?", request.form.get("email"))
 
-
+        # Check password
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
             error = 'Invalid Credentials'
             return render_template("logon.html",error=error)
@@ -86,7 +86,7 @@ def index():
         if "cart" not in session:
             session["cart"] = {}
         
-        # Update user cart in frontend
+        # Update user cart on webpage
         for item in cart:
             product_id = str(item["product_id"])
             quantity = item["quantity"]
@@ -101,9 +101,6 @@ def index():
     
     else:
         return render_template("index.html")
-    #return render_template("index.html",feature_img=feature_img)
-
-print(index)
 
 # @app.route("/search")
 # def search():
@@ -129,7 +126,7 @@ print(index)
 @app.route("/catalog", methods = ["GET", "POST"])
 def catalog():
     
-    """Show all products page"""
+    """Show all products page and ability to view page by sort options"""
     
     # Create a list of sort options
     sort_option = ["Product, A-Z", "Product, Z-A", "Price, Lowest", "Price, Highest"]
@@ -172,7 +169,6 @@ def catalog():
     
     
     return render_template("catalog.html",products=productsA_Z,sort_option=sort_option)
-    #return render_template("catalog.html",products=products,sort_option=sort_option)
     
 
 @app.route("/productDetail")
@@ -211,21 +207,18 @@ def addToCart():
     to continue shopping. 
     NOte: A situation where the user isn't logged in, we use the user's session
     to monitor its cart items.
-    But where the user is logged in from the start, we store the user's cart in the cart db (Might not need this if I plan to use the session to monitor user's cart. I'll just have to remove the item on checkout
+    But where the user is logged in from the start, we store the user's cart in the cart db (Might not need this if I plan to use the session to monitor user's cart. Will just have to remove the item on checkout)
     
-    Note: This function will only update cart number (i.e increase) MIght need to create a route to remove from cart"""
+    Note: This function will only update cart number (i.e increase). Another route will be created to remove from cart"""
     # Creating a dctionary to store the cart items and qty of a user's product in session without login in
     if "cart" not in session:
         session["cart"] = {}
     
-    # Creating a list to store the qty selected of a an item in a user's cart  
-    # if "qty" not in session:
-    #     session["qty"] = []
     
     # Get the id of the product the user has sent to the server
     id = request.args.get("id")
     
-    # Map the product and the quantity selected and sent to the server via post in the dictionary
+    # Map the product and the quantity selected as a key-value pair and send to the server via post in the dictionary
     if request.method == "POST":
         qty = request.form.get("qty")
         if qty:
@@ -235,21 +228,17 @@ def addToCart():
             else:
                 session["cart"][id] += int(qty)
     
-    # Check that the product id was sent to the server, we store it in the users cart
-    # if id and id not in session["cart"]:
-    #     session["cart"][id] = session["qty"]
-    #     #session["cart"].append(id)
     
-    print(session["cart"])
+    #print(session["cart"])
     #print(session["qty"])
     #flash("Added")
     return redirect("/catalog")
 
-print(addToCart)
-
 
 @app.route("/updateCart", methods=["GET", "POST"])
 def updateCart():
+    
+    """ Update cart """
     
     id = request.args.get("id")
     
@@ -261,11 +250,10 @@ def updateCart():
         if id and qty:
             session["cart"][id] = int(qty)
             
-    print(session["cart"])
+    #print(session["cart"])
             
     return redirect("/cart")
 
-print(updateCart)
 
 @app.route("/removeItem")
 def removeCartItem():
@@ -275,7 +263,7 @@ def removeCartItem():
     if id:
         del session["cart"][id]
         if session["user_id"] != 0:
-            # To clear product from user's cart db if user removes product from his cart in front end
+            # To clear product from user's cart db if user removes product from his cart on webpage
             db.execute(""" DELETE 
                     FROM cart_item
                     WHERE product_id = ?
@@ -290,7 +278,6 @@ def cart():
     
     """"""
     
-    #id = request.args.get("id")
     # Querying the products tabe for products in the user's session cart
     try:
         products = db.execute("""SELECT *
