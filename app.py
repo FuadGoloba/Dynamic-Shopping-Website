@@ -663,7 +663,6 @@ def order():
 def viewOrder():
     
     order_date = request.args.get("date")
-    print(order_date)
     
     order =  db.execute("""SELECT 
                         products.image, products.name, products.desc, orders.quantity, orders.product_id, orders.total, DATE(orders.created_at) AS created_date
@@ -674,9 +673,7 @@ def viewOrder():
                         AND created_date = ?""",
                         session["user_id"], order_date)
         
-    
     return render_template("viewOrder.html", order=order)
-print(viewOrder)
 
 
 @app.route("/updateWallet", methods = ["GET","POST"])
