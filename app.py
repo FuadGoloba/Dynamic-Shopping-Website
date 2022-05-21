@@ -34,8 +34,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-#session["cart"] = []
-#cart_item = len(session["cart"])
+
 
 @app.after_request
 def after_request(response):
@@ -45,7 +44,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-
+# Converting to a date time format to use in Jinja
 @app.template_filter('strftime')
 def _jinja2_filter_datetime(date, fmt=None):
     date=dateutil.parser.parse(date)
@@ -59,15 +58,6 @@ def index():
     
     """ Show Homepage and featured collections"""
     
-    #feature_img = db.execute("SELECT image FROM products limit 3")
-    #feature_img = db.execute("""SELECT 
-    #                         product_category.name AS category_name, products.image AS image, products.name AS name, products.price AS price 
-    #                         FROM products 
-    #                         JOIN product_category 
-    #                         ON product_category.id = products.category_id 
-    #                         GROUP BY products.category_id 
-    #                         LIMIT 4""")
-    #print(feature_img)
     
     # Forget any user_id
     #session.clear()
@@ -115,21 +105,26 @@ def index():
 
 print(index)
 
-@app.route("/search", methods = ["GET", "POST"])
-def search():
+# @app.route("/search")
+# def search():
     
-    q = request.args.get("q")
-    if q:
-        products = db.execute("""SELECT *
-                              FROM products
-                              WHERE name
-                              LIKE ?
-                              LIMIT 20""",
-                              "%" + q + "%")
-    else:
-        products = []
+#     return render_template("search.html")
+
+# @app.route("/searchItem", methods = ["GET", "POST"])
+# def searchItem():
+    
+#     q = request.args.get("q")
+#     if q:
+#         products = db.execute("""SELECT *
+#                               FROM products
+#                               WHERE name
+#                               LIKE ?
+#                               LIMIT 20""",
+#                               "%" + q + "%")
+#     else:
+#         products = []
         
-    return jsonify(products)
+#     return jsonify(products)
 
 @app.route("/catalog", methods = ["GET", "POST"])
 def catalog():

@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+    Search
+
+{% endblock %}
+
+{% block main %}
+
+<div class="small-container">
+
+    <div class="row row-2">
+
+        <!--form action="/searchItem" method="post"-->
+        <input autocomplete="off" autofocus placeholder="SEARCH" type="text">
+            <ul id="autoc" class="a"></ul>
+
+            
+            <script>
+
+                let input = document.querySelector('input');
+                input.addEventListener('input', async function() {
+                    let response = await fetch('/searchItem?q=' + input.value);
+                    let products = await response.json();
+                    let html = '';
+                    for (let id in products) {
+                        let name = products[id].name.replace('<', '&lt;').replace('&', '&amp;');
+                        html += '<li>' + name + '</li>';
+                    }
+                    document.querySelector('ul.a').innerHTML = html;
+                });
+    
+            </script>
+                        
+        <!--/form-->
+    </div>
+    <!--div class="row">
+        {% for product in products %}
+        <div class="col-4">
+            <a href="/productDetail?name={{ product["name"] }}">
+            <h3>{{ product["category_name"] }}</h3>
+            <img src="/static/products/{{ product["image"] }}">
+            <div class="name">{{ product["name"] }}</div>
+            <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star-half-o"></i>
+            </div>
+            <div class="price">{{ product["price"] | eur }}</div>
+            </a>
+        </div>
+        {% endfor %}
+    </div-->
+</div>
+
+{% endblock %}

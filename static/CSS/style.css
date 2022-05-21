@@ -13,9 +13,9 @@
     padding: 20px;
 }
 
-.fa.fa-search{
+/* .fa.fa-search{
     border-bottom: 1px solid black;
-}
+} */
 
 /* Styling to align navbar to right'*/
 
@@ -40,6 +40,26 @@ nav li {
     margin-right: 20px;
     -webkit-transition: color 2s;
     transition: color 2s;
+}
+
+ul.a {
+    list-style-type: circle;
+}
+
+ul.a li {
+    color:#563434;
+    transition: none;
+    display: list-item;
+    -webkit-transition: none;
+}
+
+
+
+nav a li {
+    color:#563434;
+    transition: none;
+    display: list-item;
+    -webkit-transition: none;
 }
 
 nav li:hover {
