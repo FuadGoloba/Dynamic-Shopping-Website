@@ -422,6 +422,7 @@ def register():
     
     
 @app.route("/passwordReset", methods=["GET", "POST"])
+@login_required
 def passwordReset():
     
     if request.method == "POST":
@@ -464,16 +465,19 @@ def passwordReset():
 
 
 @app.route("/profile")
+@login_required
 def profile():
     
     return render_template("profile.html")
 
 @app.route("/account")
+@login_required
 def account():
     
     return render_template("account.html")
 
 @app.route("/changePassword", methods = ["GET", "POST"])
+@login_required
 def changePassword():
     
     if request.method == "POST":
@@ -514,6 +518,7 @@ def changePassword():
     return render_template("changePassword.html")
 
 @app.route("/changeEmail", methods = ["GET", "POST"])
+@login_required
 def changeEmail():
     
     if request.method == "POST":
@@ -555,6 +560,7 @@ def changeEmail():
     return render_template("changeEmail.html")
 
 @app.route("/address")
+@login_required
 def address():
     
     # calling function to query user info
@@ -563,6 +569,7 @@ def address():
     return render_template("address.html", user_info=user_info)
 
 @app.route("/changeAddress", methods = ["GET", "POST"])
+@login_required
 def changeAddress():
     
     # Get list of countries to render
@@ -607,6 +614,7 @@ def checkout():
 print(checkout)
  
 @app.route("/processOrder")
+@login_required
 def processOrder():
     
     # Get user wallet info
@@ -645,6 +653,7 @@ def processOrder():
 
 
 @app.route("/order", methods=["GET","POST"])
+@login_required
 def order():
     
     user_order = db.execute("""SELECT 
@@ -660,6 +669,7 @@ def order():
 
 
 @app.route("/viewOrder", methods = ["GET", "POST"])
+@login_required
 def viewOrder():
     
     order_date = request.args.get("date")
@@ -673,14 +683,12 @@ def viewOrder():
                         AND created_date = ?""",
                         session["user_id"], order_date)
     
-    print(session["user_id"])
-    print(order_date)
         
     return render_template("viewOrder.html", order=order)
 
-print(viewOrder)
 
 @app.route("/updateWallet", methods = ["GET","POST"])
+@login_required
 def updateWallet():
     
     user_wallet = get_wallet()

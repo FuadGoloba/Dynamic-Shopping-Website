@@ -20,7 +20,7 @@
                     <div class="deliv-date">
                         <p></p>
                         
-                        <span>Delivered on  {{ item["created_date"] }}</span>
+                        <span>Delivered on  {{ item["created_date"] | strftime }}</span>
                         <p></p>
                         <!--br></br-->
                     </div>
