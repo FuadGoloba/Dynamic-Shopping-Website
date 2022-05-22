@@ -165,10 +165,10 @@ def orders():
     db.execute(orders_table)
 
 def main():
-    users()
-    user_wallet()
+    #users()
+    #user_wallet()
     #product_category()
-    #product_inventory()
+    product_inventory()
     #products()
     #cart_item()
     #orders()
