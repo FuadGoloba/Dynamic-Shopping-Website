@@ -10,7 +10,7 @@
         <h1> Your Orders</h1>
             {% for order in user_order %}
                 <hr>
-                {{ order["created_date"] | strftime }}
+                {{ order["created_date"] }}
 
                 <div class="order-info">
                     <p>{{ order["total"] | eur }} <a href="/viewOrder?date={{ order["created_date"] }}" onclick="this.closest('form').submit();return false;">VIEW ORDER</a></p>

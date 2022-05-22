@@ -672,9 +672,13 @@ def viewOrder():
                         WHERE user_id = ?
                         AND created_date = ?""",
                         session["user_id"], order_date)
+    
+    print(session["user_id"])
+    print(order_date)
         
     return render_template("viewOrder.html", order=order)
 
+print(viewOrder)
 
 @app.route("/updateWallet", methods = ["GET","POST"])
 def updateWallet():
