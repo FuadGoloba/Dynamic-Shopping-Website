@@ -232,7 +232,7 @@ def addToCart():
     #print(session["cart"])
     #print(session["qty"])
     #flash("Added")
-    return redirect("/catalog")
+    return redirect("/cart")
 
 
 @app.route("/updateCart", methods=["GET", "POST"])
