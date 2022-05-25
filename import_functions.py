@@ -25,10 +25,10 @@ def apology(message, code=400):
 
 
 # We create a "LOgin Required Decorator"
-# For views thas should only be used for users that are logged in, Incase a user goes to the site and is not logged in
-# they should be redirected to the login page.
+# For views thas should only be used for users that are logged in, Incase a user goes to the site and is not logged in, they should be redirected to the login page.
 # Note: A decorator is a function that wraps and replaces another function; but remember to compy the original's function information to the new function
 # Use functools.wraps() to handle this for you.
+
 def login_required(f):
     """
     Decorate routes to require login.

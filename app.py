@@ -19,7 +19,8 @@ app = Flask(__name__)
 # secret key is a random key used to encrypt your cookies and save send them to the browser.
 # The secret key is needed to keep the client-side sessions secure.
 # Secret Key is used to protect user session data in flask
-app.config["SECRET_KEY"] = "random string"
+
+#app.config["SECRET_KEY"] = "random string"
 
 # Note- Response Caching reduces the number of requests a client or proxy makes to a web server
 # Also reduces the amount of work the web server performs to generate a response
@@ -33,8 +34,6 @@ app.jinja_env.filters["eur"] = eur
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-
 
 @app.after_request
 def after_request(response):
@@ -59,9 +58,6 @@ def index():
     """ Show Homepage and featured collections"""
     
     
-    # Forget any user_id
-    #session.clear()
-    
     error = None
     if request.method == "POST":
 
@@ -80,7 +76,7 @@ def index():
         session["last_name"] = rows[0]["last_name"]
         session["email"] = rows[0]["email"]
         
-        # Query for logged in user cart item
+        # Query logged in user cart item
         cart = get_cart()
         
         if "cart" not in session:
@@ -89,9 +85,7 @@ def index():
         # Update user cart on webpage
         for item in cart:
             product_id = str(item["product_id"])
-            quantity = item["quantity"]
-            print(product_id, type(product_id))
-            
+            quantity = item["quantity"]            
             session["cart"][product_id] = quantity
             
             
@@ -101,6 +95,8 @@ def index():
     
     else:
         return render_template("index.html")
+
+# Configuring autocomplete search bar
 
 # @app.route("/search")
 # def search():
@@ -158,13 +154,13 @@ def catalog():
     # If the user selects any of the sort options, render the respective option to the pproducts page
     if request.method == "POST":
         
-        if request.form.get("sort_by") == "Product, A-Z":
+        if request.form.get("sort_by") == sort_option[0]:
             return render_template("catalog.html",sort_option=sort_option,products=productsA_Z)
-        elif request.form.get("sort_by") == "Product, Z-A":
+        elif request.form.get("sort_by") == sort_option[1]:
             return render_template("catalog.html",sort_option=sort_option,products=productsZ_A)
-        elif request.form.get("sort_by") == "Price, Lowest":
+        elif request.form.get("sort_by") == sort_option[2]:
             return render_template("catalog.html",products=productsLowest_price,sort_option=sort_option)
-        elif request.form.get("sort_by") == "Price, Highest":
+        elif request.form.get("sort_by") == sort_option[3]:
             return render_template("catalog.html",products=productsHighest_price,sort_option=sort_option)
     
     
@@ -205,10 +201,8 @@ def addToCart():
     """Idea is to get the id of the product the user selected and update
     the cart icon to 1, 2, 3, etc and redirect the user back to the product page 
     to continue shopping. 
-    NOte: A situation where the user isn't logged in, we use the user's session
-    to monitor its cart items.
-    But where the user is logged in from the start, we store the user's cart in the cart db (Might not need this if I plan to use the session to monitor user's cart. Will just have to remove the item on checkout)
-    
+    NOte: A situation where the user isn't logged in, we use the user's session to monitor its cart items.
+    But where the user is logged in from the start, we store the user's cart in the cart db should they log out, they'll still have their cart items saved
     Note: This function will only update cart number (i.e increase). Another route will be created to remove from cart"""
     # Creating a dctionary to store the cart items and qty of a user's product in session without login in
     if "cart" not in session:
@@ -228,9 +222,6 @@ def addToCart():
             else:
                 session["cart"][id] += int(qty)
     
-    
-    #print(session["cart"])
-    #print(session["qty"])
     #flash("Added")
     return redirect("/cart")
 
@@ -244,14 +235,11 @@ def updateCart():
     
     if request.method == "POST":
         qty = request.form.get("qty")
-        print(qty, type(qty))
         if qty == "0":
             return removeCartItem()
         if id and qty:
             session["cart"][id] = int(qty)
-            
-    #print(session["cart"])
-            
+                        
     return redirect("/cart")
 
 
@@ -294,8 +282,6 @@ def cart():
     # CReating a key-value pair of product id to quantity for each product queried from the products 
     for product in products:
         q = str(product["id"])
-        print(q, type(q))
-        print(session["cart"][q])
         
         # check that the product id exists in the user's session dictionary of {id:qty}
         if q in session["cart"]:
@@ -321,12 +307,9 @@ def cart():
         
         # Get user's cart
         carts = get_cart()
-        
-        print(carts)
-        
+                
         # Check that a logged in user session exists
         if len(user) != 0:
-            
             
             # if user's cart is empty, or user is adding this prpoduct to cart for the first time; then insert the product to user's cart in DB
             if len(carts) == 0 or product["id"] not in [cart["product_id"] for cart in carts]:
@@ -597,21 +580,14 @@ def checkout():
     
     user_wallet = get_wallet()
     
-    # products = db.execute("""SELECT *
-    #                       FROM products
-    #                       WHERE id in (?)
-    #                       """,list(session["cart"].keys()))
-    
     products = db.execute("""SELECT cart_item.quantity, cart_item.total, products.name, products.desc, products.image
                           FROM cart_item
                           JOIN products
                           ON products.id = cart_item.product_id
                           WHERE cart_item.user_id = ?""",
                           session["user_id"])
-    #print(products)
-    
+        
     return render_template("checkout.html", user=user, user_wallet=user_wallet,products=products)
-print(checkout)
  
 @app.route("/processOrder")
 @login_required
@@ -683,7 +659,6 @@ def viewOrder():
                         AND created_date = ?""",
                         session["user_id"], order_date)
     
-        
     return render_template("viewOrder.html", order=order)
 
 
@@ -704,5 +679,4 @@ def updateWallet():
         
         return redirect("/updateWallet")
         
-    
     return render_template("updateWallet.html", user_wallet=user_wallet[0])

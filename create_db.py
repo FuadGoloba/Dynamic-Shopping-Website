@@ -35,10 +35,7 @@ def user_wallet():
 
     user_wallet_table = """CREATE TABLE IF NOT EXISTS user_wallet
     (user_id INTEGER PRIMARY KEY NOT NULL,
-    wallet NUMERIC NOT NULL 
-    )"""
-
-    #FOREIGN KEY(user_id) REFERENCES users(id)
+    wallet NUMERIC NOT NULL )"""
 
     db.execute("DROP TABLE IF EXISTS user_wallet")
     db.execute(user_wallet_table)
@@ -56,6 +53,8 @@ def product_category():
     db.execute("DROP TABLE IF EXISTS product_category")
     db.execute(product_category_table)
 
+    # Importing CSV file containing products
+    
     with open('category.csv', 'r') as file:
 
         reader = csv.DictReader(file)
@@ -165,13 +164,15 @@ def orders():
     db.execute(orders_table)
 
 def main():
-    #users()
-    #user_wallet()
-    #product_category()
-    product_inventory()
-    #products()
-    #cart_item()
-    #orders()
+    
+    user_wallet()
+    cart_item()
+    orders()
+    users()
+    products()
+    product_category()
+    #product_inventory()
+    
 
 if __name__ == "__main__":
     main()
