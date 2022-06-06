@@ -6,11 +6,8 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import *
 import dateutil.parser
-
-
 from import_functions import apology, login_required, eur, list_of_countries, get_user, get_cart, get_wallet
 from create_db import db
-
 
 # Configure application
 app = Flask(__name__)
@@ -19,7 +16,6 @@ app = Flask(__name__)
 # secret key is a random key used to encrypt your cookies and save send them to the browser.
 # The secret key is needed to keep the client-side sessions secure.
 # Secret Key is used to protect user session data in flask
-
 #app.config["SECRET_KEY"] = "random string"
 
 # Note- Response Caching reduces the number of requests a client or proxy makes to a web server
@@ -52,8 +48,7 @@ def _jinja2_filter_datetime(date, fmt=None):
     return native.strftime(format)
 
 @app.route("/", methods=["GET", "POST"])
-def index():
-    
+def index():    
     """ Show Homepage and featured collections"""
     error = None
     if request.method == "POST":
@@ -85,15 +80,12 @@ def index():
         return render_template("index.html")
 
 # Configuring autocomplete search bar
-
 # @app.route("/search")
 # def search():
-    
 #     return render_template("search.html")
 
 # @app.route("/searchItem", methods = ["GET", "POST"])
 # def searchItem():
-    
 #     q = request.args.get("q")
 #     if q:
 #         products = db.execute("""SELECT *
